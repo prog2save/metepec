@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CiudadanoController;
+use App\Http\Controllers\DireccionMunicipalController;
 
 // dashboard pages
 Route::get('/', function () {
@@ -87,3 +89,9 @@ Route::get('/videos', function () {
 //Paginas nuevas
 
 Route::resource('usuarios', UserController::class);
+
+//ciudadanos
+Route::resource('ciudadanos', CiudadanoController::class);
+
+//direcciones municipales
+Route::resource('direcciones', DireccionMunicipalController::class);
