@@ -1,14 +1,16 @@
-import './bootstrap';
-import Alpine from 'alpinejs';
-import ApexCharts from 'apexcharts';
+import "./bootstrap";
+import Alpine from "alpinejs";
+import ApexCharts from "apexcharts";
 
 // flatpickr
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 // FullCalendar
-import { Calendar } from '@fullcalendar/core';
+import { Calendar } from "@fullcalendar/core";
 
-
+//TomSelect
+import TomSelect from "tom-select";
+import "tom-select/dist/css/tom-select.css";
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
@@ -18,34 +20,62 @@ window.FullCalendar = Calendar;
 Alpine.start();
 
 // Initialize components on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     // Map imports
-    if (document.querySelector('#mapOne')) {
-        import('./components/map').then(module => module.initMap());
+    if (document.querySelector("#mapOne")) {
+        import("./components/map").then((module) => module.initMap());
     }
 
     // Chart imports
-    if (document.querySelector('#chartOne')) {
-        import('./components/chart/chart-1').then(module => module.initChartOne());
+    if (document.querySelector("#chartOne")) {
+        import("./components/chart/chart-1").then((module) =>
+            module.initChartOne(),
+        );
     }
-    if (document.querySelector('#chartTwo')) {
-        import('./components/chart/chart-2').then(module => module.initChartTwo());
+    if (document.querySelector("#chartTwo")) {
+        import("./components/chart/chart-2").then((module) =>
+            module.initChartTwo(),
+        );
     }
-    if (document.querySelector('#chartThree')) {
-        import('./components/chart/chart-3').then(module => module.initChartThree());
+    if (document.querySelector("#chartThree")) {
+        import("./components/chart/chart-3").then((module) =>
+            module.initChartThree(),
+        );
     }
-    if (document.querySelector('#chartSix')) {
-        import('./components/chart/chart-6').then(module => module.initChartSix());
+    if (document.querySelector("#chartSix")) {
+        import("./components/chart/chart-6").then((module) =>
+            module.initChartSix(),
+        );
     }
-    if (document.querySelector('#chartEight')) {
-        import('./components/chart/chart-8').then(module => module.initChartEight());
+    if (document.querySelector("#chartEight")) {
+        import("./components/chart/chart-8").then((module) =>
+            module.initChartEight(),
+        );
     }
-    if (document.querySelector('#chartThirteen')) {
-        import('./components/chart/chart-13').then(module => module.initChartThirteen());
+    if (document.querySelector("#chartThirteen")) {
+        import("./components/chart/chart-13").then((module) =>
+            module.initChartThirteen(),
+        );
     }
 
     // Calendar init
-    if (document.querySelector('#calendar')) {
-        import('./components/calendar-init').then(module => module.calendarInit());
+    if (document.querySelector("#calendar")) {
+        import("./components/calendar-init").then((module) =>
+            module.calendarInit(),
+        );
     }
+
+    const ids = ["#id_ciudadano", "#id_agente_asignado", "#id_direccion_municipal"];
+
+    ids.forEach((sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+
+        new TomSelect(el, {
+            create: false,
+            sortField: { field: "text", direction: "asc" },
+            placeholder: "Escribe para buscar...",
+            allowEmptyOption: true,
+        });
+    });
 });

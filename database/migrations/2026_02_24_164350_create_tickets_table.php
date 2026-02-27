@@ -15,22 +15,29 @@ return new class extends Migration
             $table->id();
 
             //Llaves foraneas
-            $table->foreignId('ciudadano_id')
+            $table->foreignId('id_ciudadano')
                 ->constrained('ciudadanos')
                 ->restrictOnDelete();
 
-            $table->foreignId('direccion_id')
+            $table->foreignId('id_direccion_municipal')
                 ->constrained('direccion_municipals')
                 ->restrictOnDelete();
 
-            $table->foreignId('agente_id')
+            $table->foreignId('id_agente_asignado')
                 ->constrained('usuarios')
                 ->restrictOnDelete();
 
             
-            $table->string('asunto');
+            $table->string('asunto',200);
             $table->text('descripcion');
-            
+            $table->string('tipo_servicio');
+            $table->enum('estado',['Abierto','En Proceso', 'Resuelto', 'Cerrado'])->default('Abierto');
+            $table->date('fecha_resolucion')->nullable();
+            $table->decimal('latitud', 10, 7)->nullable(); //Entrada de API ArcGIS
+            $table->decimal('longitud', 10, 7)->nullable(); //Entrada de API ArcGIS
+            $table->text('observaciones')->nullable();
+            $table->json('adjuntos')->nullable(); // urls/metadatos
+
             $table->timestamps();
         });
     }
