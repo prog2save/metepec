@@ -1,7 +1,7 @@
 @props(['tickets'])
 
 <div>
-    
+
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table class="w-full min-w-[1102px]">
@@ -46,9 +46,20 @@
 
                         {{-- Estado --}}
                         <td class="px-4 sm:px-6 py-3.5">
-                            <p class="text-gray-700 text-theme-sm dark:text-gray-400">
-                                {{ $t->estado ?? '—' }}
-                            </p>
+                            <span class="
+                                inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium
+                                @if($t->estado === 'Resuelto')
+                                    bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800
+                                @elseif($t->estado === 'Pendiente')
+                                    bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700
+                                @elseif($t->estado === 'Nuevo')
+                                    bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800
+                                @elseif($t->estado === 'Abierto')
+                                    bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800
+                                @endif
+                            ">
+                                {{ $t->estado }}
+                            </span>
                         </td>
 
                         {{-- Nombre del ticket --}}

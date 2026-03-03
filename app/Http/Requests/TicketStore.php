@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TicketStore extends FormRequest
 {
@@ -19,11 +20,18 @@ class TicketStore extends FormRequest
                 'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
                 'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
                 'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+                'id_servicio' => [
+                    'required',
+                    'integer',
+                    Rule::exists('servicios', 'id')->where(
+                        fn($q) =>
+                        $q->where('id_direccion_municipal', $this->input('id_direccion_municipal'))
+                    ),
+                ],
 
                 'asunto' => ['required', 'string', 'max:200'],
                 'descripcion' => ['required', 'string'],
 
-                'tipo_servicio' => ['required', 'string', 'max:100'],
                 'canal_ingreso' => ['nullable', 'string', 'max:50'],
                 'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
                 'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
@@ -41,11 +49,18 @@ class TicketStore extends FormRequest
             'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
             'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
             'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+            'id_servicio' => [
+                'required',
+                'integer',
+                Rule::exists('servicios', 'id')->where(
+                    fn($q) =>
+                    $q->where('id_direccion_municipal', $this->input('id_direccion_municipal'))
+                ),
+            ],
 
             'asunto' => ['required', 'string', 'max:200'],
             'descripcion' => ['required', 'string'],
 
-            'tipo_servicio' => ['required', 'string', 'max:100'],
             'canal_ingreso' => ['nullable', 'string', 'max:50'],
             'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
             'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
@@ -73,6 +88,8 @@ class TicketStore extends FormRequest
             'id_ciudadano.exists' => 'El ciudadano seleccionado no existe.',
             'id_direccion_municipal.required' => 'La dirección municipal es obligatoria.',
             'id_direccion_municipal.exists' => 'La dirección municipal seleccionada no existe.',
+            'id_servicio.required' => 'El servicio es obligatorio.',
+            'id_servicio.exists' => 'El servicio seleccionado no existe.',
             'id_agente_asignado.required' => 'El agente asignado es obligatorio.',
             'id_agente_asignado.exists' => 'El agente asignado seleccionado no existe.',
             'asunto.required' => 'El asunto es obligatorio.',

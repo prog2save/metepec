@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TicketStore;
 use App\Models\Ciudadano;
 use App\Models\DireccionMunicipal;
+use App\Models\Servicio;
 use App\Models\Usuario;
 
 class TicketController extends Controller
@@ -40,7 +41,12 @@ class TicketController extends Controller
             ->orderBy('nombre_direccion')
             ->get();
 
-        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones'));
+        $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')
+            ->where('activo', true) 
+            ->orderBy('nombre_servicio')
+            ->get();
+
+        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios'));
     }
 
     /**
@@ -75,7 +81,9 @@ class TicketController extends Controller
 
         Ticket::create($input);
 
-        return redirect()->back()->with('success', 'Ticket creado exitosamente.');
+        return redirect()
+        ->route('tickets.index')
+        ->with('success', 'Ticket creado exitosamente.');
     }
 
     /**
@@ -106,7 +114,12 @@ class TicketController extends Controller
             ->orderBy('nombre_direccion')
             ->get();
 
-        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones'));
+        $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')
+            ->where('activo', true)
+            ->orderBy('nombre_servicio')
+            ->get();
+
+        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios'));
     }
 
     /**
@@ -136,7 +149,9 @@ class TicketController extends Controller
 
         $ticket->update($input);
 
-        return redirect()->back()->with('success', 'Ticket actualizado exitosamente.');
+        return redirect()
+        ->route('tickets.index')
+        ->with('success', 'Ticket actualizado exitosamente.');
     }
 
     /**
