@@ -2,7 +2,6 @@
 @section('content')
 <x-common.page-breadcrumb pageTitle="Editar Ticket" />
 
-{{-- Estilos SOLO para esta vista (EDIT) --}}
 <style>
     /* TomSelect: contenedor visible */
     .ts-wrapper {
@@ -31,7 +30,6 @@
         box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0, 0, 0, .05));
     }
 
-    /* ✅ CLAVE: el input del buscador */
     .ts-control>input {
         margin: 0 !important;
         padding: 0 !important;
@@ -60,7 +58,6 @@
         /* white/90 */
     }
 
-    /* ✅ CLAVE: texto que escribes en dark */
     .dark .ts-control>input {
         color: rgba(255, 255, 255, .90) !important;
         caret-color: rgba(255, 255, 255, .90) !important;
@@ -208,7 +205,7 @@
 
     <x-common.component-card title="Editar Ticket">
 
-        <form action="{{ route('tickets.update', $ticket->id) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('tickets.update', $ticket->id) }}" method="post" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PATCH')
 
@@ -257,27 +254,116 @@
                 </select>
             </div>
 
-            {{-- Dirección municipal --}}
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Dirección Municipal</label>
-                <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
-                    <option value="">Selecciona una dirección</option>
-                    @foreach($direcciones as $d)
-                    <option value="{{ $d->id }}"
-                        {{ (string)old('id_direccion_municipal', $ticket->id_direccion_municipal) === (string)$d->id ? 'selected' : '' }}>
-                        {{ $d->nombre_direccion }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+            <div
+                x-data="{
+                    servicios: @js($servicios),
 
-            <div>
-                <label for="tipo_servicio" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Tipo de Servicio
-                </label>
-                <input type="text" id="tipo_servicio" name="tipo_servicio"
-                    value="{{ old('tipo_servicio', $ticket->tipo_servicio) }}"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                    // valores actuales (create usa old())
+                    direccion: @js(old('id_direccion_municipal', $ticket->id_direccion_municipal)),
+                    servicio: @js(old('id_servicio', $ticket->id_servicio)),
+
+                    tsDireccion: null,
+                    tsServicio: null,
+
+                    init() {
+                        this.$nextTick(() => {
+                            const dirEl = document.getElementById('id_direccion_municipal');
+                            const servEl = document.getElementById('id_servicio');
+                            if (!dirEl || !servEl) return;
+
+                            this.tsDireccion = dirEl.tomselect ?? new TomSelect(dirEl, {
+                            create: false,
+                            allowEmptyOption: true,
+                            placeholder: 'Selecciona una dirección',
+                            });
+
+                            this.tsServicio = servEl.tomselect ?? new TomSelect(servEl, {
+                            create: false,
+                            allowEmptyOption: true,
+                            placeholder: 'Selecciona un servicio',
+                            });
+
+                            // Listener dirección (toma valor real desde TomSelect)
+                            this.tsDireccion.off('change');
+                            this.tsDireccion.on('change', () => {
+                            this.direccion = String(this.tsDireccion.getValue() || '');
+                            this.refreshServicios();
+                            });
+
+                            // Listener servicio (opcional)
+                            this.tsServicio.off('change');
+                            this.tsServicio.on('change', () => {
+                            this.servicio = String(this.tsServicio.getValue() || '');
+                            });
+
+                            // Si venían valores por old(), setéalos
+                            if (this.direccion) this.tsDireccion.setValue(String(this.direccion), true);
+
+                            // Aplica filtro inicial
+                            this.refreshServicios();
+
+                            if (this.servicio) this.tsServicio.setValue(String(this.servicio), true);
+                        });
+                        },
+
+                        refreshServicios() {
+                            if (!this.tsServicio) return;
+
+                            const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
+                            const selected = String(this.servicio || ''); 
+
+                            this.tsServicio.clearOptions();
+                            this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
+
+                            const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
+
+                            filtrados.forEach(s => {
+                                this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio });
+                            });
+
+                            this.tsServicio.refreshOptions(false);
+
+                            
+                            if (selected && filtrados.some(s => String(s.id) === selected)) {
+                                this.tsServicio.setValue(selected, true);
+                                return;
+                            }
+
+                            if (selected) {
+                                this.servicio = '';
+                                this.tsServicio.clear(true);
+                            }
+                            },
+                }"
+                class="space-y-4">
+                {{-- Dirección municipal --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Dirección municipal
+                    </label>
+
+                    <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
+                        <option value="">Selecciona una dirección</option>
+                        @foreach($direcciones as $d)
+                        <option value="{{ $d->id }}" {{ (string)old('id_direccion_municipal') === (string)$d->id ? 'selected' : '' }}>
+                            {{ $d->nombre_direccion }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Servicio (filtrado por dirección) --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Servicio
+                    </label>
+
+                    <select id="id_servicio" name="id_servicio" class="w-full">
+                        <option value="">Selecciona un servicio</option>
+                        {{-- Las opciones las gestiona refreshServicios() --}}
+                    </select>
+
+                </div>
             </div>
 
             <div>

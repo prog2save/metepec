@@ -10,9 +10,9 @@ class Ticket extends Model
         'id_ciudadano',
         'id_direccion_municipal',
         'id_agente_asignado',
+        'id_servicio',
         'asunto',
         'descripcion',
-        'tipo_servicio',
         'tipo_ticket',
         'canal_ingreso',
         'prioridad',
@@ -43,5 +43,10 @@ class Ticket extends Model
     public function agente()
     {
         return $this->belongsTo(Usuario::class, 'id_agente_asignado'); // o User::class
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo(Servicio::class, 'id_servicio');
     }
 }

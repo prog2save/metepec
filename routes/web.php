@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CiudadanoController;
 use App\Http\Controllers\DireccionMunicipalController;
+use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\TicketController;
 
 // dashboard pages
@@ -103,3 +104,6 @@ Route::put(
     '/tickets/{id}/resuelto',
     [TicketController::class, 'tickethecho']
 )->name('tickets.tickethecho');
+
+//servicios
+Route::resource('servicios', ServiciosController::class);

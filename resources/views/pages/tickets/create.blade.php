@@ -273,25 +273,119 @@
                 </select>
             </div>
 
-            {{-- Dirección municipal (TomSelect) --}}
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Dirección Municipal</label>
-                <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
-                    <option value="">Selecciona una dirección</option>
-                    @foreach($direcciones as $d)
-                    <option value="{{ $d->id }}" {{ old('id_direccion_municipal') == $d->id ? 'selected' : '' }}>
-                        {{ $d->nombre_direccion }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+            <div
+                x-data="{
+                    servicios: @js($servicios),
 
-            <div>
-                <label for="tipo_servicio" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Tipo de Servicio
-                </label>
-                <input type="text" id="tipo_servicio" name="tipo_servicio" value="{{ old('tipo_servicio') }}"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                    // valores actuales (create usa old())
+                    direccion: @js(old('id_direccion_municipal', '')),
+                    servicio: @js(old('id_servicio', '')),
+
+                    tsDireccion: null,
+                    tsServicio: null,
+
+                    init() {
+                        this.$nextTick(() => {
+                            const dirEl = document.getElementById('id_direccion_municipal');
+                            const servEl = document.getElementById('id_servicio');
+                            if (!dirEl || !servEl) return;
+
+                            this.tsDireccion = dirEl.tomselect ?? new TomSelect(dirEl, {
+                            create: false,
+                            allowEmptyOption: true,
+                            placeholder: 'Selecciona una dirección',
+                            });
+
+                            this.tsServicio = servEl.tomselect ?? new TomSelect(servEl, {
+                            create: false,
+                            allowEmptyOption: true,
+                            placeholder: 'Selecciona un servicio',
+                            });
+
+                            // Listener dirección (toma valor real desde TomSelect)
+                            this.tsDireccion.off('change');
+                            this.tsDireccion.on('change', () => {
+                            this.direccion = String(this.tsDireccion.getValue() || '');
+                            this.refreshServicios();
+                            });
+
+                            // Listener servicio (opcional)
+                            this.tsServicio.off('change');
+                            this.tsServicio.on('change', () => {
+                            this.servicio = String(this.tsServicio.getValue() || '');
+                            });
+
+                            // Si venían valores por old(), setéalos
+                            if (this.direccion) this.tsDireccion.setValue(String(this.direccion), true);
+
+                            // Aplica filtro inicial
+                            this.refreshServicios();
+
+                            if (this.servicio) this.tsServicio.setValue(String(this.servicio), true);
+                        });
+                        },
+
+                        refreshServicios() {
+                        if (!this.tsServicio) return;
+
+                        const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
+
+                        console.log('direccion=', dir);
+                        console.log('servicios total=', this.servicios?.length);
+
+                        this.tsServicio.clearOptions();
+                        this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
+
+                        const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
+
+                        filtrados.forEach(s => {
+                            this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio });
+                        });
+
+                        this.tsServicio.refreshOptions(false);
+
+                        // Si el servicio ya no corresponde, límpialo
+                        const actual = String(this.tsServicio.getValue() || '');
+                        const ok = filtrados.some(s => String(s.id) === actual);
+
+                        if (!ok) {
+                            this.servicio = '';
+                            this.tsServicio.clear(true);
+                        }
+                        },
+                }"
+                class="space-y-4">
+                {{-- Dirección municipal --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Dirección municipal
+                    </label>
+
+                    <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
+                        <option value="">Selecciona una dirección</option>
+                        @foreach($direcciones as $d)
+                        <option value="{{ $d->id }}" {{ (string)old('id_direccion_municipal') === (string)$d->id ? 'selected' : '' }}>
+                            {{ $d->nombre_direccion }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Servicio (filtrado por dirección) --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                        Servicio
+                    </label>
+
+                    <select id="id_servicio" name="id_servicio" class="w-full">
+                        <option value="">Selecciona un servicio</option>
+                        {{-- Las opciones las gestiona refreshServicios() --}}
+                    </select>
+
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Selecciona una dirección para ver sus servicios.
+                    </p>
+                </div>
             </div>
 
             <div>
@@ -449,6 +543,12 @@
             new TomSelect('#id_direccion_municipal', {
                 ...opts,
                 placeholder: 'Selecciona una dirección'
+            });
+        }
+        if (document.querySelector('#id_servicio') && !document.querySelector('#id_servicio')?.tomselect) {
+            new TomSelect('#id_servicio', {
+                ...opts,
+                placeholder: 'Selecciona un servicio'
             });
         }
     });

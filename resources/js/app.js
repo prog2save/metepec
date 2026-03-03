@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    const ids = ["#id_ciudadano", "#id_agente_asignado", "#id_direccion_municipal"];
+    const ids = ["#id_ciudadano", "#id_agente_asignado", "#id_direccion_municipal", "#id_servicio"];
 
     ids.forEach((sel) => {
         const el = document.querySelector(sel);
