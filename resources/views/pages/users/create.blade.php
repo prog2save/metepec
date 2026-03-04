@@ -27,7 +27,7 @@
 
         <x-common.component-card title="Crear Nuevo Usuario">
 
-            <form action="{{ route(name: 'usuarios.store') }}" method="post">
+            <form action="{{ route(name: 'usuarios.store') }}" method="post" class="space-y-3">
                 @csrf
                 <div>
                     <label for="nombre" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -45,6 +45,18 @@
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
 
                 </div>
+                <div>
+                <label for="role" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    Rol del usuario
+                </label>
+                <select name="role" id="role"
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
+                    <option value="">Selecciona un rol</option>
+                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
+                    <option value="ciudadano" {{ old('role') == 'ciudadano' ? 'selected' : '' }}>Ciudadano</option>
+                    <option value="agente" {{ old('role') == 'agente' ? 'selected' : '' }}>Agente</option>
+                </select>
+            </div>
                 <div>
                     <label for="telefono" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Telefono
@@ -65,7 +77,7 @@
                     <label for="curp" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         CURP
                     </label>
-                    <input type="text" maxlength="16" id="curp" name="curp" value="{{ old('curp') }}"
+                    <input type="text" maxlength="18" id="curp" name="curp" value="{{ old('curp') }}"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
 
                 </div>

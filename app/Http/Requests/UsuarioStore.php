@@ -13,30 +13,39 @@ class UsuarioStore extends FormRequest
 
     public function rules(): array
     {
-        if ($this->isMethod('patch') || $this->isMethod('put')) {
+        $regexCurp = '/^[A-ZÑ]{4}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[HM][A-Z]{2}[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z][0-9]$/';
 
-            $usuarioId = $this->route('usuario');
-            // si usas Route Model Binding esto ya es el modelo
+        // Obtener id para ignore unique en update
+        $usuarioParam = $this->route('usuario');
+        $usuarioId = $usuarioParam instanceof \App\Models\Usuario ? $usuarioParam->id : $usuarioParam;
 
-            return [
-                'nombre' => 'required|string|max:100',
-                'apellido' => 'required|string|max:100',
-                'telefono' => 'nullable|string|max:10',
+        $base = [
+            'nombre' => ['required', 'string', 'max:100'],
+            'apellido' => ['required', 'string', 'max:100'],
+            'telefono' => ['nullable', 'string', 'max:10'],
+            'role' => ['required', 'in:admin,ciudadano,agente'], // o 'rol'
+        ];
 
-                'email' => 'required|email|unique:usuarios,email,' . $usuarioId,
-                'curp' => 'required|string|max:18|unique:usuarios,curp,' . $usuarioId,
-
-                'password' => 'nullable|string|min:8|confirmed',
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            return $base + [
+                'email' => ['required', 'email', "unique:usuarios,email,{$usuarioId},id"],
+                'curp' => ['required', 'string', 'size:18', "unique:usuarios,curp,{$usuarioId},id", 'regex:' . $regexCurp],
+                'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             ];
         }
-        return [
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
-            'telefono' => 'nullable|string|max:10',
-            'email' => 'required|email|unique:usuarios,email',
-            'curp' => 'required|string|max:18|unique:usuarios,curp',
-            'password' => 'required|string|min:8|confirmed',
+
+        return $base + [
+            'email' => ['required', 'email', 'unique:usuarios,email'],
+            'curp' => ['required', 'string', 'size:18', 'unique:usuarios,curp', 'regex:' . $regexCurp],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->curp) {
+            $this->merge(['curp' => strtoupper($this->curp)]);
+        }
     }
 
     public function messages(): array

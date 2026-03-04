@@ -17,6 +17,9 @@
                             Fecha Registro</th>
                         <th scope="col"
                             class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                            Rol</th>
+                        <th scope="col"
+                            class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
                             Acciones</th>
                     </tr>
                 </thead>
@@ -58,6 +61,11 @@
                             <td class="px-5 py-4 sm:px-6">
                                 <span class="text-gray-500 text-theme-sm dark:text-gray-400">
                                     {{ $user->created_at->format('d/m/Y') }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-4 sm:px-6">
+                                <span class="text-gray-500 text-theme-sm dark:text-gray-400">
+                                    {{ $user->role }}
                                 </span>
                             </td>
                             <td class="px-4 sm:px-6 py-3.5 gap-2">
