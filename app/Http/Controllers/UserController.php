@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use App\Http\Requests\UsuarioStore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -33,7 +34,9 @@ class UserController extends Controller
         $input = $request->validated();
         $input['password'] = bcrypt($input['password']);
         Usuario::create($input);
-        return redirect()->back()->with('success', 'Usuario creado exitosamente.');
+        return redirect()
+            ->route('usuarios.index')
+            ->with('success', 'Usuario creado exitosamente.');
     }
 
     /**
@@ -61,7 +64,9 @@ class UserController extends Controller
         $input = $request->validated();
         $input['password'] = bcrypt($input['password']);
         Usuario::where('id', $id)->update($input);
-        return redirect()->back()->with('success', 'Usuario actualizado exitosamente.');
+        return redirect()
+            ->route('usuarios.index')
+            ->with('success', 'Usuario actualizado exitosamente.');
     }
 
     /**
@@ -69,7 +74,15 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        Usuario::destroy($id);
+        // Evitar que el usuario se borre a sí mismo
+        $usuario = Usuario::findOrFail($id);
+
+        if (Auth::id() === $usuario->id) {
+            return back()->withErrors(['usuario' => 'No puedes eliminar tu propio usuario.']);
+        }
+
+        $usuario->delete();
+
         return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
     }
 }
