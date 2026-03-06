@@ -13,9 +13,10 @@ class MenuHelper
             [
                 'icon' => 'citizen-icon',
                 'name' => 'Ciudadanos',
-                'path' => '/ciudadanos',
+                'path' => '/agente/ciudadanos',
                 'subItems' => [
                     ['name' => 'Lista', 'path' => '/ciudadanos/'],
+                    ['name' => 'Alta', 'path' => '/agente/ciudadanos/create'],
                 ],
             ],
             [

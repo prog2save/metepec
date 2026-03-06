@@ -42,6 +42,10 @@
 
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
         <h2 class="text-base font-semibold text-gray-800 dark:text-white/90">Mis tickets asignados</h2>
+        <a href="{{ route('agente.tickets.create') }}"
+            class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors">
+            + Nuevo ticket
+        </a>
     </div>
 
     <div class="max-w-full overflow-x-auto">

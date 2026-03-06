@@ -62,7 +62,7 @@
                                     </svg>
                                 </button>
                             </div>
-                            <!-- Recordarme -->
+                            <!-- Recordarme 
                             <div class="flex items-center justify-between">
                                 <div x-data="{ checkboxToggle: false }">
                                     <label for="remember"
@@ -87,6 +87,7 @@
                                     </label>
                                 </div>
                             </div>
+                            -->
                             <!-- Botón -->
                             <div>
                                 <button type="submit"

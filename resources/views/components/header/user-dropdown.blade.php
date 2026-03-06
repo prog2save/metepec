@@ -13,10 +13,10 @@
         @click.prevent="toggleDropdown()"
         type="button">
         <span class="mr-3 overflow-hidden rounded-full h-11 w-11">
-            <img src="/images/user/owner.png" alt="User" />
+            <img src="/images/user/usuario.png" alt="User" />
         </span>
 
-        <span class="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span class="block mr-1 font-medium text-theme-sm">{{auth()->user()->nombre}}</span>
 
         <!-- Chevron Icon -->
         <svg
@@ -42,8 +42,8 @@
         style="display: none;">
         <!-- User Info -->
         <div>
-            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">Musharof Chowdhury</span>
-            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">randomuser@pimjo.com</span>
+            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{auth()->user()->nombre}} {{auth()->user()->apellido}}</span>
+            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{auth()->user()->email}}</span>
         </div>
 
         <!-- Menu Items -->
@@ -51,7 +51,7 @@
             @php
             $menuItems = [
             [
-            'text' => 'Edit profile',
+            'text' => 'Editar perfil',
             'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     fill-rule="evenodd"
@@ -62,7 +62,7 @@
             'path' => 'profile',
             ],
             [
-            'text' => 'Account settings',
+            'text' => 'Configuración de cuenta',
             'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     fill-rule="evenodd"
@@ -73,7 +73,7 @@
             'path' => 'chat'
             ],
             [
-            'text' => 'Support',
+            'text' => 'Ayuda',
             'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     fill-rule="evenodd"
