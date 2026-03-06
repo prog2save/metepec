@@ -18,6 +18,7 @@
 
     <!-- Theme Store -->
     <script>
+        
         document.addEventListener('alpine:init', () => {
             Alpine.store('theme', {
                 init() {
@@ -132,9 +133,9 @@
         </div>
 
     </div>
+    @stack('scripts')
 
 </body>
 
-@stack('scripts')
 
 </html>

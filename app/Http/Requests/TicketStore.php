@@ -19,7 +19,7 @@ class TicketStore extends FormRequest
             return [
                 'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
                 'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
-                'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+                'id_agente_asignado' => ['nullable', 'exists:usuarios,id'],
                 'id_servicio' => [
                     'required',
                     'integer',
@@ -48,7 +48,7 @@ class TicketStore extends FormRequest
         return [
             'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
             'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
-            'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+            'id_agente_asignado' => ['nullable', 'exists:usuarios,id'],
             'id_servicio' => [
                 'required',
                 'integer',
@@ -90,7 +90,6 @@ class TicketStore extends FormRequest
             'id_direccion_municipal.exists' => 'La dirección municipal seleccionada no existe.',
             'id_servicio.required' => 'El servicio es obligatorio.',
             'id_servicio.exists' => 'El servicio seleccionado no existe.',
-            'id_agente_asignado.required' => 'El agente asignado es obligatorio.',
             'id_agente_asignado.exists' => 'El agente asignado seleccionado no existe.',
             'asunto.required' => 'El asunto es obligatorio.',
             'asunto.string' => 'El asunto debe ser una cadena de texto.',

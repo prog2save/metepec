@@ -14,7 +14,7 @@ class Ticket extends Model
         'asunto',
         'descripcion',
         'tipo_ticket',
-        'canal_ingreso',
+        'id_canal',
         'prioridad',
         'estado',
         'direccion_texto',
@@ -49,4 +49,8 @@ class Ticket extends Model
     {
         return $this->belongsTo(Servicio::class, 'id_servicio');
     }
+    public function canal()
+{
+    return $this->belongsTo(CanalIngreso::class, 'id_canal');
+}
 }

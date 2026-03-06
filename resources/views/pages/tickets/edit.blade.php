@@ -366,12 +366,13 @@
                 </div>
             </div>
 
+            {{-- Canal ingreso (edit) --}}
             <div>
                 <label for="canal_ingreso" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Canal de Ingreso
                 </label>
                 <input type="text" id="canal_ingreso" name="canal_ingreso"
-                    value="{{ old('canal_ingreso', $ticket->canal_ingreso) }}"
+                    value="{{ old('canal_ingreso', $ticket->canal?->nombre) }}"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
             </div>
 
@@ -536,4 +537,72 @@
         </form>
     </x-common.component-card>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const opts = {
+            create: false,
+            allowEmptyOption: true,
+            placeholder: 'Selecciona una opción',
+        };
+
+        if (document.querySelector('#id_ciudadano') && !document.querySelector('#id_ciudadano')?.tomselect) {
+            new TomSelect('#id_ciudadano', {
+                ...opts,
+                placeholder: 'Selecciona un ciudadano'
+            });
+        }
+
+        if (document.querySelector('#id_agente_asignado') && !document.querySelector('#id_agente_asignado')?.tomselect) {
+            new TomSelect('#id_agente_asignado', {
+                ...opts,
+                placeholder: 'Selecciona un agente (opcional)'
+            });
+        }
+
+        if (document.querySelector('#id_direccion_municipal') && !document.querySelector('#id_direccion_municipal')?.tomselect) {
+            new TomSelect('#id_direccion_municipal', {
+                ...opts,
+                placeholder: 'Selecciona una dirección'
+            });
+        }
+
+        if (document.querySelector('#id_servicio') && !document.querySelector('#id_servicio')?.tomselect) {
+            new TomSelect('#id_servicio', {
+                ...opts,
+                placeholder: 'Selecciona un servicio'
+            });
+        }
+        /*
+        // Lógica estado según agente en edit
+        const agenteTs = document.querySelector('#id_agente_asignado')?.tomselect;
+        const estadoEl = document.getElementById('estado');
+        const estadoHint = document.getElementById('estado-hint');
+
+        if (agenteTs && estadoEl) {
+            // Estado inicial: si ya tiene agente asignado, deshabilitar estado
+            if (agenteTs.getValue()) {
+                estadoEl.disabled = true;
+                estadoHint?.classList.remove('hidden');
+            }
+
+            agenteTs.on('change', (val) => {
+                if (val) {
+                    // Solo forzar a Abierto si el estado actual es Nuevo
+                    if (estadoEl.value === 'Nuevo') {
+                        estadoEl.value = 'Abierto';
+                    }
+                    estadoEl.disabled = true;
+                    estadoHint?.classList.remove('hidden');
+                } else {
+                    estadoEl.disabled = false;
+                    estadoHint?.classList.add('hidden');
+                }
+            });
+        }
+            */
+    });
+</script>
+@endpush
+
 @endsection

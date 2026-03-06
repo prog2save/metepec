@@ -44,10 +44,11 @@ class LoginController extends Controller
 
     private function redirectByRole(string $role)
     {
-        return match($role) {
-            'admin' => redirect('/'),
-            'agente'  => redirect('/'),
-            default => redirect('/'),
+        return match ($role) {
+            'admin'     => redirect()->route('dashboard'),
+            'agente'    => redirect()->route('agente.dashboard'), 
+            'ciudadano' => redirect()->route('ciudadano.dashboard'),
+            default     => redirect()->route('dashboard'),
         };
     }
 }

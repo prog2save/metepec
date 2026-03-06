@@ -9,6 +9,7 @@ use App\Models\Ciudadano;
 use App\Models\DireccionMunicipal;
 use App\Models\Servicio;
 use App\Models\Usuario;
+use App\Models\CanalIngreso;
 
 class TicketController extends Controller
 {
@@ -42,11 +43,15 @@ class TicketController extends Controller
             ->get();
 
         $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')
-            ->where('activo', true) 
+            ->where('activo', true)
             ->orderBy('nombre_servicio')
             ->get();
 
-        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios'));
+        $canales = CanalIngreso::select('id', 'nombre')
+            ->orderBy('nombre')
+            ->get();
+
+        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales'));
     }
 
     /**
@@ -55,6 +60,12 @@ class TicketController extends Controller
     public function store(TicketStore $request)
     {
         $input = $request->validated();
+
+        if (!empty($input['canal_ingreso'])) {
+            $canal = CanalIngreso::firstOrCreate(['nombre' => $input['canal_ingreso']]);
+            $input['id_canal'] = $canal->id;
+        }
+        unset($input['canal_ingreso']);
 
         $adjuntos = [];
 
@@ -79,11 +90,15 @@ class TicketController extends Controller
             $input['fecha_resolucion'] = now();
         }
 
+        if (!empty($input['id_agente_asignado']) && ($input['estado'] ?? 'Nuevo') === 'Nuevo') {
+            $input['estado'] = 'Abierto';
+        }
+
         Ticket::create($input);
 
         return redirect()
-        ->route('tickets.index')
-        ->with('success', 'Ticket creado exitosamente.');
+            ->route('tickets.index')
+            ->with('success', 'Ticket creado exitosamente.');
     }
 
     /**
@@ -119,7 +134,11 @@ class TicketController extends Controller
             ->orderBy('nombre_servicio')
             ->get();
 
-        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios'));
+        $canales = CanalIngreso::select('id', 'nombre')
+            ->orderBy('nombre')
+            ->get();
+
+        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales'));
     }
 
     /**
@@ -129,6 +148,12 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
         $input = $request->validated();
+
+        if (!empty($input['canal_ingreso'])) {
+            $canal = CanalIngreso::firstOrCreate(['nombre' => $input['canal_ingreso']]);
+            $input['id_canal'] = $canal->id;
+        }
+        unset($input['canal_ingreso']);
 
         $adjuntos = $ticket->adjuntos ?? [];
 
@@ -147,11 +172,16 @@ class TicketController extends Controller
 
         $input['adjuntos'] = $adjuntos;
 
+        // Si se asigna agente a un ticket Nuevo, cambiar estado a Abierto
+        if (!empty($input['id_agente_asignado']) && $ticket->estado === 'Nuevo') {
+            $input['estado'] = 'Abierto';
+        }
+
         $ticket->update($input);
 
         return redirect()
-        ->route('tickets.index')
-        ->with('success', 'Ticket actualizado exitosamente.');
+            ->route('tickets.index')
+            ->with('success', 'Ticket actualizado exitosamente.');
     }
 
     /**

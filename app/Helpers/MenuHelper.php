@@ -2,8 +2,33 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 class MenuHelper
 {
+    public static function getAgenteNavItems()
+    {
+        return [
+            [
+                'icon' => 'citizen-icon',
+                'name' => 'Ciudadanos',
+                'path' => '/ciudadanos',
+                'subItems' => [
+                    ['name' => 'Lista', 'path' => '/ciudadanos/'],
+                ],
+            ],
+            [
+                'icon' => 'ticket-icon',
+                'name' => 'Tickets',
+                'path' => '/agente/tickets',
+                'subItems' => [
+                    ['name' => 'Mis tickets', 'path' => '/agente/tickets'],
+                ],
+            ],
+        ];
+    }
+
     public static function getMainNavItems()
     {
         return [
@@ -40,7 +65,7 @@ class MenuHelper
                 'path' => '/servicios',
                 'subItems' => [
                     ['name' => 'Todos los servicios', 'path' => '/servicios/'],
-                    
+
                 ],
             ],
             [
@@ -50,7 +75,7 @@ class MenuHelper
                 'subItems' => [
                     ['name' => 'Alta', 'path' => '/tickets/create'],
                     ['name' => 'Todos los tickets', 'path' => '/tickets/'],
-                    
+
                 ],
             ]
         ];
@@ -136,15 +161,19 @@ class MenuHelper
 
     public static function getMenuGroups()
     {
+        $user = Auth::user();
+
+        $items = match ($user?->role) {
+            'agente'    => self::getAgenteNavItems(),
+            //'ciudadano' => self::getCiudadanoNavItems(), // para cuando lo hagas
+            default     => self::getMainNavItems(),       // admin ve todo
+        };
+
         return [
             [
                 'title' => 'Menu',
-                'items' => self::getMainNavItems()
+                'items' => $items,
             ],
-            // [
-            //     'title' => 'Others',
-            //     'items' => self::getOthersItems()
-            // ]
         ];
     }
 

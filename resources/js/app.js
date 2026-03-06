@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ids.forEach((sel) => {
         const el = document.querySelector(sel);
-        if (!el) return;
+        if (!el.tomselect) { 
 
         new TomSelect(el, {
             create: false,
@@ -77,5 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             placeholder: "Escribe para buscar...",
             allowEmptyOption: true,
         });
+
+    }
     });
 });

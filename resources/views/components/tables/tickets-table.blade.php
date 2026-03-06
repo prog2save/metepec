@@ -108,7 +108,7 @@
 
                         <td>
                             <p class="text-gray-700 text-theme-sm dark:text-gray-400">
-                                {{ optional($t->fecha_resolucion)->format('Y-m-d') }}
+                                {{ optional($t->fecha_resolucion)->format('Y-m-d') ?? '—' }}
                             </p>
                         </td>
 
