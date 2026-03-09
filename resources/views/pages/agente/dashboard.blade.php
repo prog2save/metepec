@@ -49,20 +49,26 @@
     </div>
 
     <div class="max-w-full overflow-x-auto">
-        <table class="w-full min-w-[900px]">
+        <table id="tabla-tickets" class="w-full min-w-[900px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
+                    <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[55px]">ID</th>
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Estado</th>
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Asunto</th>
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Solicitante</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Prioridad</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Fecha de creación</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[100px]">Prioridad</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[150px]">Fecha de creación</th>
                     <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400">Acción</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($tickets as $t)
                 <tr class="border-b border-gray-100 dark:border-gray-800">
+
+                    {{-- ID --}}
+                    <td class="px-4 py-3.5">
+                        <p class="text-gray-700 text-theme-sm dark:text-gray-400">#{{ $t->id }}</p>
+                    </td>
 
                     {{-- Estado --}}
                     <td class="px-4 py-3.5">
@@ -139,11 +145,27 @@
         </table>
     </div>
 
-    {{-- Paginación --}}
-    <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]">
-        {{ $tickets->links() }}
-    </div>
 
 </div>
 
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new DataTable('#tabla-tickets', {
+            searchable: true,
+            perPage: 10,
+            columns: [{
+                    select: [6],
+                    sortable: false
+                } // Acciones y Completar sin ordenamiento
+            ],
+            labels: {
+                placeholder: "Buscar tickets...",
+                perPage: "Tickets por página",
+                noRows: "No se encontraron tickets",
+                info: "Mostrando {start} a {end} de {rows} tickets"
+            }
+        });
+    });
+</script>

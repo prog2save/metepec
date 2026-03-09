@@ -41,3 +41,24 @@
     </x-common.component-card>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new DataTable('#ciudadanos-table', {
+            searchable: true,
+            perPage: 10,
+            columns: [{
+                select: [4, 5],
+                sortable: false
+            }],
+            labels: {
+                placeholder: "Buscar ciudadano...",
+                perPage: "Ciudadanos por página",
+                noRows: "No se encontraron ciudadanos",
+                info: "Mostrando {start} a {end} de {rows} ciudadanos"
+            }
+        });
+    });
+</script>
+@endpush

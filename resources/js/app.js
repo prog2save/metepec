@@ -12,10 +12,13 @@ import { Calendar } from "@fullcalendar/core";
 import TomSelect from "tom-select";
 import "tom-select/dist/css/tom-select.css";
 
+import { DataTable } from "simple-datatables";
+
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
+window.DataTable = DataTable;
 
 Alpine.start();
 

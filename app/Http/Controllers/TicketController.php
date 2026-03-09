@@ -20,7 +20,7 @@ class TicketController extends Controller
     {
         $tickets = Ticket::with('ciudadano', 'agente')
             ->orderByDesc('id')
-            ->paginate(10);
+            ->get();
         return view('pages.tickets.index', compact('tickets'));
     }
 

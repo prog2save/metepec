@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap') layer(base);
 @import 'prismjs/themes/prism.min.css';
 @import 'tailwindcss';
-
+@import "simple-datatables/dist/style.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -879,4 +879,107 @@ pre[class*='language-'] {
   .flatpickr-calendar.static {
     margin-right: -60px !important;
   }
+}
+
+/* Input de búsqueda */
+.datatable-input {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    color: #374151;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.datatable-input::placeholder {
+    color: #9ca3af;
+}
+
+.datatable-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+}
+
+/* Selector de registros por página */
+.datatable-selector {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.875rem;
+    color: #374151;
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Texto info */
+.datatable-info {
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+/* Paginación */
+.datatable-pagination a {
+    font-size: 0.875rem;
+    color: #6b7280;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.375rem;
+}
+
+.datatable-pagination .active a {
+    background-color: #6366f1;
+    color: #ffffff;
+}
+
+.datatable-pagination a:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+/* ——— MODO OSCURO ——— */
+.dark .datatable-input {
+    border-color: #374151;
+    background-color: transparent;
+    color: #d1d5db;
+}
+
+.dark .datatable-input::placeholder {
+    color: #6b7280;
+}
+
+.dark .datatable-input:focus {
+    border-color: #6366f1;
+}
+
+.dark .datatable-selector {
+    border-color: #374151;
+    background-color: transparent;
+    color: #d1d5db;
+}
+
+.dark .datatable-info {
+    color: #6b7280;
+}
+
+.dark .datatable-pagination a {
+    color: #9ca3af;
+}
+
+.dark .datatable-pagination .active a {
+    background-color: #6366f1;
+    color: #ffffff;
+}
+
+.dark .datatable-pagination a:hover {
+    background-color: #1f2937;
+    color: #f9fafb;
+}
+
+.datatable-top .datatable-dropdown label {
+    color: #6b7280 !important;
+    font-size: 0.875rem !important;
+}
+
+.dark .datatable-top .datatable-dropdown label {
+    color: #9ca3af !important;
 }
