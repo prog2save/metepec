@@ -8,6 +8,7 @@ use App\Http\Controllers\DireccionMunicipalController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\AgenteController;
+use App\Http\Controllers\EstadoTicketController;
 
 // Rutas publicas de autenticacion (solo para no autenticados)
 Route::middleware('guest')->group(function () {
@@ -84,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tickets', TicketController::class);
     Route::put('/tickets/{id}/resuelto', [TicketController::class, 'tickethecho'])->name('tickets.tickethecho');
     Route::resource('servicios', ServiciosController::class);
+    Route::resource('estados', EstadoTicketController::class);
 
     // Rutas para agentes
     Route::prefix('agente')->name('agente.')->group(function () {

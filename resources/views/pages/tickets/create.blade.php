@@ -435,6 +435,16 @@
                     <option value="Abierto" {{ old('estado') == 'Abierto' ? 'selected' : '' }}>Abierto</option>
                     <option value="Pendiente" {{ old('estado') == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
                     <option value="Resuelto" {{ old('estado') == 'Resuelto' ? 'selected' : '' }}>Resuelto</option>
+
+                    {{-- Estados personalizados de la tabla estado_ticket --}}
+                    @if($estados->isNotEmpty())
+                        @foreach($estados as $estadoCustom)
+                        <option value="{{ $estadoCustom->nombre_agente }}"
+                            {{ old('estado', '') == $estadoCustom->nombre_agente ? 'selected' : '' }}>
+                            {{ $estadoCustom->nombre_agente }}
+                        </option>
+                        @endforeach
+                    @endif
                 </select>
                 <p id="estado-hint" class="mt-1 text-xs text-gray-500 dark:text-gray-400 hidden">
                     El estado se establece automáticamente a <strong>Abierto</strong> al asignar un agente.

@@ -415,6 +415,16 @@
                     <option value="Abierto" {{ old('estado', $ticket->estado) == 'Abierto' ? 'selected' : '' }}>Abierto</option>
                     <option value="Pendiente" {{ old('estado', $ticket->estado) == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
                     <option value="Resuelto" {{ old('estado', $ticket->estado) == 'Resuelto' ? 'selected' : '' }}>Resuelto</option>
+
+                    {{-- Estados personalizados de la tabla estado_ticket --}}
+                    @if($estados->isNotEmpty())
+                        @foreach($estados as $estadoCustom)
+                        <option value="{{ $estadoCustom->nombre_agente }}"
+                            {{ old('estado', $ticket->estado) == $estadoCustom->nombre_agente ? 'selected' : '' }}>
+                            {{ $estadoCustom->nombre_agente }}
+                        </option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
 

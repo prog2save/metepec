@@ -10,6 +10,7 @@ use App\Models\DireccionMunicipal;
 use App\Models\Servicio;
 use App\Models\Usuario;
 use App\Models\CanalIngreso;
+use App\Models\EstadoTicket;
 
 class TicketController extends Controller
 {
@@ -18,7 +19,7 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        $tickets = Ticket::with('ciudadano', 'agente')
+        $tickets = Ticket::with('ciudadano', 'agente', 'estado')
             ->orderByDesc('id')
             ->get();
         return view('pages.tickets.index', compact('tickets'));
@@ -50,8 +51,12 @@ class TicketController extends Controller
         $canales = CanalIngreso::select('id', 'nombre')
             ->orderBy('nombre')
             ->get();
+        
+        $estados = EstadoTicket::select('id', 'nombre_agente')
+            ->orderBy('nombre_agente')
+            ->get();
 
-        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales'));
+        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados'));
     }
 
     /**
@@ -137,8 +142,12 @@ class TicketController extends Controller
         $canales = CanalIngreso::select('id', 'nombre')
             ->orderBy('nombre')
             ->get();
+        
+        $estados = EstadoTicket::select('id', 'nombre_agente')
+            ->orderBy('nombre_agente')
+            ->get();
 
-        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales'));
+        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados'));
     }
 
     /**

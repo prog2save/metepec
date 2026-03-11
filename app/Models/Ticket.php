@@ -39,7 +39,7 @@ class Ticket extends Model
         return $this->belongsTo(DireccionMunicipal::class, 'id_direccion_municipal');
     }
 
-    
+
     public function agente()
     {
         return $this->belongsTo(Usuario::class, 'id_agente_asignado'); // o User::class
@@ -50,7 +50,12 @@ class Ticket extends Model
         return $this->belongsTo(Servicio::class, 'id_servicio');
     }
     public function canal()
-{
-    return $this->belongsTo(CanalIngreso::class, 'id_canal');
-}
+    {
+        return $this->belongsTo(CanalIngreso::class, 'id_canal');
+    }
+
+    public function estado() 
+    {
+        return $this->belongsTo(EstadoTicket::class, 'id_estado');
+    }
 }

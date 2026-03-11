@@ -36,7 +36,7 @@ class TicketStore extends FormRequest
                 'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
                 'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
 
-                'estado' => ['required', 'in:Nuevo,Abierto,Pendiente,Resuelto'],
+                'estado' => ['required', 'string', 'max:50'],
                 'fecha_resolucion' => ['nullable', 'date', 'after_or_equal:today'],
 
                 'latitud' => ['nullable', 'numeric'],
@@ -65,7 +65,7 @@ class TicketStore extends FormRequest
             'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
             'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
 
-            'estado' => ['required', 'in:Nuevo,Abierto,Pendiente,Resuelto'],
+            'estado' => ['required', 'string', 'max:50'],
 
             'direccion_texto' => ['nullable', 'string', 'max:255'],
             'latitud' => ['nullable', 'numeric'],
