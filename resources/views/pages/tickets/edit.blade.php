@@ -3,191 +3,44 @@
 <x-common.page-breadcrumb pageTitle="Editar Ticket" />
 
 <style>
-    /* TomSelect: contenedor visible */
-    .ts-wrapper {
-        width: 100%;
-    }
-
+    .ts-wrapper { width: 100%; }
     .ts-control {
-        height: 2.75rem;
-        /* h-11 */
-        width: 100%;
-        border-radius: .5rem;
-        /* rounded-lg */
-        border: 1px solid rgb(209 213 219);
-        /* gray-300 */
-        background: transparent;
-        padding: .625rem 1rem;
-        /* similar px-4 py-2.5 */
-        font-size: .875rem;
-        /* text-sm */
-        line-height: 1.25rem;
-        color: rgb(31 41 55);
-        /* text-gray-800 */
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0, 0, 0, .05));
+        height: 2.75rem; width: 100%; border-radius: .5rem;
+        border: 1px solid rgb(209 213 219); background: transparent;
+        padding: .625rem 1rem; font-size: .875rem; line-height: 1.25rem;
+        color: rgb(31 41 55); display: flex; align-items: center; gap: .5rem;
+        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0,0,0,.05));
     }
-
-    .ts-control>input {
-        margin: 0 !important;
-        padding: 0 !important;
-        font-size: .875rem !important;
-        line-height: 1.25rem !important;
-        color: rgb(31 41 55) !important;
-        /* claro */
-        background: transparent !important;
+    .ts-control > input {
+        margin: 0 !important; padding: 0 !important;
+        font-size: .875rem !important; line-height: 1.25rem !important;
+        color: rgb(31 41 55) !important; background: transparent !important;
         caret-color: rgb(31 41 55) !important;
-        /* cursor visible */
-    }
-
-    /* placeholder del buscador */
-    .ts-control>input::placeholder {
-        color: rgb(156 163 175) !important;
-        /* gray-400 */
-    }
-
-    /* Dark mode */
-    .dark .ts-control {
-        border-color: rgb(55 65 81);
-        /* gray-700 */
-        background-color: rgb(17 24 39);
-        /* gray-900 */
-        color: rgba(255, 255, 255, .90);
-        /* white/90 */
-    }
-
-    .dark .ts-control>input {
-        color: rgba(255, 255, 255, .90) !important;
-        caret-color: rgba(255, 255, 255, .90) !important;
-    }
-
-    .dark .ts-control>input::placeholder {
-        color: rgba(255, 255, 255, .30) !important;
-    }
-
-    /* focus ring similar a tus inputs */
-    .ts-wrapper.focus .ts-control,
-    .ts-control:focus-within {
-        outline: none;
-        border-color: rgb(147 197 253);
-        /* aprox brand-300 */
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
-    }
-
-    .dark .ts-wrapper.focus .ts-control,
-    .dark .ts-control:focus-within {
-        border-color: rgb(30 64 175);
-        /* aprox brand-800 */
-    }
-
-    /* dropdown */
-    .ts-dropdown {
-        margin-top: .25rem;
-        border-radius: .5rem;
-        border: 1px solid rgb(229 231 235);
-        /* gray-200 */
-        background: #fff;
-        overflow: hidden;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, .08);
-        z-index: 50;
-    }
-
-    .dark .ts-dropdown {
-        border-color: rgb(55 65 81);
-        background: rgb(17 24 39);
-    }
-
-    .ts-dropdown .ts-dropdown-content {
-        max-height: 15rem;
-        overflow: auto;
-    }
-
-    .ts-dropdown .option {
-        padding: .5rem 1rem;
-        font-size: .875rem;
-        line-height: 1.25rem;
-        cursor: pointer;
-        color: rgb(55 65 81);
-        /* gray-700 */
-    }
-
-    .dark .ts-dropdown .option {
-        color: rgb(229 231 235);
-        /* gray-200 */
-    }
-
-    .ts-dropdown .option.active {
-        background: rgb(243 244 246);
-        /* gray-100 */
-    }
-
-    .dark .ts-dropdown .option.active {
-        background: rgb(31 41 55);
-        /* gray-800 */
-    }
-
-    .ts-dropdown .option.selected {
-        background: rgba(59, 130, 246, .08);
-        color: rgb(29 78 216);
-    }
-
-    .dark .ts-dropdown .option.selected {
-        background: rgb(31 41 55);
-        color: rgba(255, 255, 255, .90);
-    }
-
-    .ts-control {
-        background-color: transparent !important;
-    }
-
-    /* Fondo del input interno también transparente (por si el navegador lo pinta) */
-    .ts-control>input {
-        background-color: transparent !important;
-    }
-
-    /* Cuando TomSelect entra en focus, forzamos el fondo (claro) */
-    .ts-wrapper.focus .ts-control,
-    .ts-control:focus-within {
-        background-color: transparent !important;
-    }
-
-    /* Dark mode: fondo consistente, incluso en focus */
-    .dark .ts-control {
-        background-color: rgb(17 24 39) !important;
-        /* gray-900 */
-    }
-
-    .dark .ts-wrapper.focus .ts-control,
-    .dark .ts-control:focus-within {
-        background-color: rgb(17 24 39) !important;
-    }
-
-    /* FIX extra: algunos navegadores usan text-fill-color */
-    .ts-control>input {
         -webkit-text-fill-color: rgb(31 41 55) !important;
-        /* text-gray-800 */
     }
-
-    .dark .ts-control>input {
-        -webkit-text-fill-color: rgba(255, 255, 255, .90) !important;
-        /* white/90 */
-    }
-
-    /* Si el dropdown toggle/íconos se pierden en fondo, mantenlos visibles */
-    .ts-control .ts-dropdown-toggle {
-        background: transparent !important;
-    }
+    .ts-control > input::placeholder { color: rgb(156 163 175) !important; }
+    .dark .ts-control { border-color: rgb(55 65 81); background-color: rgb(17 24 39) !important; color: rgba(255,255,255,.90); }
+    .dark .ts-control > input { color: rgba(255,255,255,.90) !important; caret-color: rgba(255,255,255,.90) !important; -webkit-text-fill-color: rgba(255,255,255,.90) !important; }
+    .dark .ts-control > input::placeholder { color: rgba(255,255,255,.30) !important; }
+    .ts-control { background-color: transparent !important; }
+    .ts-wrapper.focus .ts-control, .ts-control:focus-within { outline: none; border-color: rgb(147 197 253); box-shadow: 0 0 0 3px rgba(59,130,246,.10); background-color: transparent !important; }
+    .dark .ts-wrapper.focus .ts-control, .dark .ts-control:focus-within { border-color: rgb(30 64 175); background-color: rgb(17 24 39) !important; }
+    .ts-control .ts-dropdown-toggle { margin-left: auto; opacity: .7; background: transparent !important; }
+    .ts-dropdown { margin-top: .25rem; border-radius: .5rem; border: 1px solid rgb(229 231 235); background: #fff; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,.08); z-index: 50; }
+    .dark .ts-dropdown { border-color: rgb(55 65 81); background: rgb(17 24 39); }
+    .ts-dropdown .ts-dropdown-content { max-height: 15rem; overflow: auto; }
+    .ts-dropdown .option { padding: .5rem 1rem; font-size: .875rem; cursor: pointer; color: rgb(55 65 81); }
+    .dark .ts-dropdown .option { color: rgb(229 231 235); }
+    .ts-dropdown .option.active { background: rgb(243 244 246); }
+    .dark .ts-dropdown .option.active { background: rgb(31 41 55); }
+    .ts-dropdown .option.selected { background: rgba(59,130,246,.08); color: rgb(29 78 216); }
+    .dark .ts-dropdown .option.selected { background: rgb(31 41 55); color: rgba(255,255,255,.90); }
 </style>
 
-<div class="space-y-6">
+<div class="space-y-4">
 
     @if (session('success'))
-    <div class="space-y-4">
-        <x-ui.alert variant="success" title="{{ session('success') }}" message="" :showLink="false" linkHref="/"
-            linkText="Learn more" />
-    </div>
+    <x-ui.alert variant="success" title="{{ session('success') }}" message="" :showLink="false" linkHref="/" linkText="" />
     @endif
 
     @if ($errors->any())
@@ -203,414 +56,340 @@
     </x-ui.alert>
     @endif
 
-    <x-common.component-card title="Editar Ticket">
+    <form action="{{ route('tickets.update', $ticket->id) }}" method="post" enctype="multipart/form-data">
+        @csrf
+        @method('PATCH')
 
-        <form action="{{ route('tickets.update', $ticket->id) }}" method="post" enctype="multipart/form-data" class="space-y-4">
-            @csrf
-            @method('PATCH')
+        <div class="flex gap-4 items-start">
 
-            <div>
-                <label for="asunto" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Asunto
-                </label>
-                <input type="text" id="asunto" name="asunto"
-                    value="{{ old('asunto', $ticket->asunto) }}"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-            </div>
+            {{-- ════════════════════════════════
+                 COLUMNA IZQUIERDA — Metadata
+            ════════════════════════════════ --}}
+            <div class="w-72 shrink-0 space-y-3">
 
-            <div>
-                <label for="descripcion" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Descripción
-                </label>
-                <textarea name="descripcion" id="descripcion"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 min-h-[110px] w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">{{ old('descripcion', $ticket->descripcion) }}</textarea>
-            </div>
+                {{-- Card principal --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
 
-            {{-- Ciudadano --}}
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Ciudadano</label>
-                <select id="id_ciudadano" name="id_ciudadano" class="w-full">
-                    <option value="">Selecciona un ciudadano</option>
-                    @foreach($ciudadanos as $c)
-                    <option value="{{ $c->id }}"
-                        {{ (string)old('id_ciudadano', $ticket->id_ciudadano) === (string)$c->id ? 'selected' : '' }}>
-                        {{ $c->nombre }} {{ $c->apellido_paterno }} {{ $c->apellido_materno }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+                    <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h2 class="text-sm font-semibold text-gray-800 dark:text-white/90">#{{ $ticket->id }} — Ticket</h2>
+                        <span class="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium
+                            @if($ticket->estado === 'Resuelto') bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800
+                            @elseif($ticket->estado === 'Pendiente') bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700
+                            @elseif($ticket->estado === 'Nuevo') bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800
+                            @elseif($ticket->estado === 'Abierto') bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800
+                            @else bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800
+                            @endif">
+                            {{ $ticket->estado }}
+                        </span>
+                    </div>
 
-            {{-- Agente --}}
-            <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Agente</label>
-                <select id="id_agente_asignado" name="id_agente_asignado" class="w-full">
-                    <option value="">Selecciona un agente</option>
-                    @foreach($agentes as $a)
-                    <option value="{{ $a->id }}"
-                        {{ (string)old('id_agente_asignado', $ticket->id_agente_asignado) === (string)$a->id ? 'selected' : '' }}>
-                        {{ $a->nombre }} {{ $a->apellido}}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+                    <div class="space-y-4 p-4">
 
-            <div
-                x-data="{
-                    servicios: @js($servicios),
-
-                    // valores actuales (create usa old())
-                    direccion: @js(old('id_direccion_municipal', $ticket->id_direccion_municipal)),
-                    servicio: @js(old('id_servicio', $ticket->id_servicio)),
-
-                    tsDireccion: null,
-                    tsServicio: null,
-
-                    init() {
-                        this.$nextTick(() => {
-                            const dirEl = document.getElementById('id_direccion_municipal');
-                            const servEl = document.getElementById('id_servicio');
-                            if (!dirEl || !servEl) return;
-
-                            this.tsDireccion = dirEl.tomselect ?? new TomSelect(dirEl, {
-                            create: false,
-                            allowEmptyOption: true,
-                            placeholder: 'Selecciona una dirección',
-                            });
-
-                            this.tsServicio = servEl.tomselect ?? new TomSelect(servEl, {
-                            create: false,
-                            allowEmptyOption: true,
-                            placeholder: 'Selecciona un servicio',
-                            });
-
-                            // Listener dirección (toma valor real desde TomSelect)
-                            this.tsDireccion.off('change');
-                            this.tsDireccion.on('change', () => {
-                            this.direccion = String(this.tsDireccion.getValue() || '');
-                            this.refreshServicios();
-                            });
-
-                            // Listener servicio (opcional)
-                            this.tsServicio.off('change');
-                            this.tsServicio.on('change', () => {
-                            this.servicio = String(this.tsServicio.getValue() || '');
-                            });
-
-                            // Si venían valores por old(), setéalos
-                            if (this.direccion) this.tsDireccion.setValue(String(this.direccion), true);
-
-                            // Aplica filtro inicial
-                            this.refreshServicios();
-
-                            if (this.servicio) this.tsServicio.setValue(String(this.servicio), true);
-                        });
-                        },
-
-                        refreshServicios() {
-                            if (!this.tsServicio) return;
-
-                            const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
-                            const selected = String(this.servicio || ''); 
-
-                            this.tsServicio.clearOptions();
-                            this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
-
-                            const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
-
-                            filtrados.forEach(s => {
-                                this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio });
-                            });
-
-                            this.tsServicio.refreshOptions(false);
-
-                            
-                            if (selected && filtrados.some(s => String(s.id) === selected)) {
-                                this.tsServicio.setValue(selected, true);
-                                return;
-                            }
-
-                            if (selected) {
-                                this.servicio = '';
-                                this.tsServicio.clear(true);
-                            }
-                            },
-                }"
-                class="space-y-4">
-                {{-- Dirección municipal --}}
-                <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Dirección municipal
-                    </label>
-
-                    <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
-                        <option value="">Selecciona una dirección</option>
-                        @foreach($direcciones as $d)
-                        <option value="{{ $d->id }}" {{ (string)old('id_direccion_municipal') === (string)$d->id ? 'selected' : '' }}>
-                            {{ $d->nombre_direccion }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Servicio (filtrado por dirección) --}}
-                <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Servicio
-                    </label>
-
-                    <select id="id_servicio" name="id_servicio" class="w-full">
-                        <option value="">Selecciona un servicio</option>
-                        {{-- Las opciones las gestiona refreshServicios() --}}
-                    </select>
-
-                </div>
-            </div>
-
-            {{-- Canal ingreso (edit) --}}
-            <div>
-                <label for="canal_ingreso" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Canal de Ingreso
-                </label>
-                <input type="text" id="canal_ingreso" name="canal_ingreso"
-                    value="{{ old('canal_ingreso', $ticket->canal?->nombre) }}"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
-            </div>
-
-            <div>
-                <label for="tipo_ticket" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Tipo de Ticket
-                </label>
-                <select name="tipo_ticket" id="tipo_ticket"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                    <option value="">Selecciona un tipo de ticket</option>
-                    <option value="Pregunta" {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Pregunta' ? 'selected' : '' }}>Pregunta</option>
-                    <option value="Incidente" {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Incidente' ? 'selected' : '' }}>Incidente</option>
-                    <option value="Problema" {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Problema' ? 'selected' : '' }}>Problema</option>
-                    <option value="Tarea" {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Tarea' ? 'selected' : '' }}>Tarea</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="prioridad" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Prioridad
-                </label>
-                <select name="prioridad" id="prioridad"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                    <option value="">Selecciona una prioridad</option>
-                    <option value="Baja" {{ old('prioridad', $ticket->prioridad) == 'Baja' ? 'selected' : '' }}>Baja</option>
-                    <option value="Media" {{ old('prioridad', $ticket->prioridad) == 'Media' ? 'selected' : '' }}>Media</option>
-                    <option value="Alta" {{ old('prioridad', $ticket->prioridad) == 'Alta' ? 'selected' : '' }}>Alta</option>
-                    <option value="Urgente" {{ old('prioridad', $ticket->prioridad) == 'Urgente' ? 'selected' : '' }}>Urgente</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="estado" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Estado del ticket
-                </label>
-                <select name="estado" id="estado"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                    <option value="">Selecciona un estado</option>
-                    <option value="Nuevo" {{ old('estado', $ticket->estado) == 'Nuevo' ? 'selected' : '' }}>Nuevo</option>
-                    <option value="Abierto" {{ old('estado', $ticket->estado) == 'Abierto' ? 'selected' : '' }}>Abierto</option>
-                    <option value="Pendiente" {{ old('estado', $ticket->estado) == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
-                    <option value="Resuelto" {{ old('estado', $ticket->estado) == 'Resuelto' ? 'selected' : '' }}>Resuelto</option>
-
-                    {{-- Estados personalizados de la tabla estado_ticket --}}
-                    @if($estados->isNotEmpty())
-                        @foreach($estados as $estadoCustom)
-                        <option value="{{ $estadoCustom->nombre_agente }}"
-                            {{ old('estado', $ticket->estado) == $estadoCustom->nombre_agente ? 'selected' : '' }}>
-                            {{ $estadoCustom->nombre_agente }}
-                        </option>
-                        @endforeach
-                    @endif
-                </select>
-            </div>
-
-            <div>
-                <label for="fecha_resolucion"
-                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Fecha de resolución (opcional)
-                </label>
-
-                <div class="relative">
-                    <input
-                        type="date"
-                        id="fecha_resolucion"
-                        name="fecha_resolucion"
-                        value="{{ old('fecha_resolucion', optional($ticket->fecha_resolucion)->format('Y-m-d')) }}"
-                        min="{{ now()->toDateString() }}"
-                        class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 
-                                dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 
-                                bg-transparent px-4 pr-12 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 
-                                focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 
-                                dark:text-white/90 dark:placeholder:text-white/30" />
-
-                    {{-- Botón para abrir el calendario --}}
-                    <button
-                        type="button"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center
-                            rounded-lg border border-gray-200 bg-white text-gray-600
-                            hover:bg-gray-50 focus:outline-none focus:ring-3 focus:ring-brand-500/10
-                            dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
-                        onclick="
-                                const i = document.getElementById('fecha_resolucion');
-                                if (!i) return;
-                                if (typeof i.showPicker === 'function') { i.showPicker(); return; }
-                                i.focus(); i.click();
-                            "
-                        aria-label="Seleccionar fecha"
-                        title="Seleccionar fecha">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <div>
-                <label for="observaciones" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Observaciones
-                </label>
-                <textarea name="observaciones" id="observaciones"
-                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 min-h-[110px] w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">{{ old('observaciones', $ticket->observaciones) }}</textarea>
-            </div>
-
-            {{-- Adjuntos existentes --}}
-            @php
-            $adjuntos = is_array($ticket->adjuntos) ? $ticket->adjuntos : [];
-            @endphp
-
-            @if (!empty($adjuntos))
-            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Adjuntos actuales</h4>
-
-                <ul class="mt-3 space-y-2">
-                    @foreach ($adjuntos as $a)
-                    <li class="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2 dark:border-gray-800">
-                        <div class="text-sm text-gray-700 dark:text-gray-300">
-                            {{ $a['nombre_original'] ?? 'Archivo' }}
-                            @if (!empty($a['tamano']))
-                            <span class="text-xs text-gray-500 dark:text-gray-400">
-                                ({{ round($a['tamano'] / 1024, 1) }} KB)
-                            </span>
-                            @endif
+                        {{-- Ciudadano --}}
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Solicitante
+                            </label>
+                            <select id="id_ciudadano" name="id_ciudadano" class="w-full">
+                                <option value="">Selecciona un ciudadano</option>
+                                @foreach($ciudadanos as $c)
+                                <option value="{{ $c->id }}"
+                                    {{ (string)old('id_ciudadano', $ticket->id_ciudadano) === (string)$c->id ? 'selected' : '' }}>
+                                    {{ $c->nombre }} {{ $c->apellido_paterno }} {{ $c->apellido_materno }}
+                                </option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        @if (!empty($a['ruta']))
-                        <a href="{{ asset('storage/' . $a['ruta']) }}"
-                            target="_blank" rel="noopener"
-                            class="text-indigo-600 hover:underline text-sm">
-                            Ver / Descargar
-                        </a>
+                        {{-- Agente --}}
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Agente asignado
+                            </label>
+                            <select id="id_agente_asignado" name="id_agente_asignado" class="w-full">
+                                <option value="">–</option>
+                                @foreach($agentes as $a)
+                                <option value="{{ $a->id }}"
+                                    {{ (string)old('id_agente_asignado', $ticket->id_agente_asignado) === (string)$a->id ? 'selected' : '' }}>
+                                    {{ $a->nombre }} {{ $a->apellido }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Dirección + Servicio --}}
+                        <div
+                            x-data="{
+                                servicios: @js($servicios),
+                                direccion: @js(old('id_direccion_municipal', $ticket->id_direccion_municipal)),
+                                servicio: @js(old('id_servicio', $ticket->id_servicio)),
+                                tsDireccion: null, tsServicio: null,
+                                init() {
+                                    this.$nextTick(() => {
+                                        const dirEl = document.getElementById('id_direccion_municipal');
+                                        const servEl = document.getElementById('id_servicio');
+                                        if (!dirEl || !servEl) return;
+                                        this.tsDireccion = dirEl.tomselect ?? new TomSelect(dirEl, { create: false, allowEmptyOption: true });
+                                        this.tsServicio  = servEl.tomselect  ?? new TomSelect(servEl,  { create: false, allowEmptyOption: true });
+                                        this.tsDireccion.off('change');
+                                        this.tsDireccion.on('change', () => { this.direccion = String(this.tsDireccion.getValue() || ''); this.refreshServicios(); });
+                                        this.tsServicio.off('change');
+                                        this.tsServicio.on('change', () => { this.servicio = String(this.tsServicio.getValue() || ''); });
+                                        if (this.direccion) this.tsDireccion.setValue(String(this.direccion), true);
+                                        this.refreshServicios();
+                                        if (this.servicio) this.tsServicio.setValue(String(this.servicio), true);
+                                    });
+                                },
+                                refreshServicios() {
+                                    if (!this.tsServicio) return;
+                                    const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
+                                    const selected = String(this.servicio || '');
+                                    this.tsServicio.clearOptions();
+                                    this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
+                                    const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
+                                    filtrados.forEach(s => this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio }));
+                                    this.tsServicio.refreshOptions(false);
+                                    if (selected && filtrados.some(s => String(s.id) === selected)) {
+                                        this.tsServicio.setValue(selected, true); return;
+                                    }
+                                    if (selected) { this.servicio = ''; this.tsServicio.clear(true); }
+                                }
+                            }"
+                            class="space-y-4">
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Dirección municipal
+                                </label>
+                                <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
+                                    <option value="">Selecciona una dirección</option>
+                                    @foreach($direcciones as $d)
+                                    <option value="{{ $d->id }}"
+                                        {{ (string)old('id_direccion_municipal', $ticket->id_direccion_municipal) === (string)$d->id ? 'selected' : '' }}>
+                                        {{ $d->nombre_direccion }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Servicio
+                                </label>
+                                <select id="id_servicio" name="id_servicio" class="w-full">
+                                    <option value="">Selecciona un servicio</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Canal de ingreso --}}
+                        <div>
+                            <label for="canal_ingreso" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Canal de ingreso
+                            </label>
+                            <input type="text" id="canal_ingreso" name="canal_ingreso"
+                                value="{{ old('canal_ingreso', $ticket->canal?->nombre) }}"
+                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
+                        </div>
+
+                        {{-- Tipo --}}
+                        <div>
+                            <label for="tipo_ticket" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Tipo
+                            </label>
+                            <select name="tipo_ticket" id="tipo_ticket"
+                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                <option value="">Selecciona un tipo</option>
+                                <option value="Pregunta"  {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Pregunta'  ? 'selected' : '' }}>Pregunta</option>
+                                <option value="Incidente" {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Incidente' ? 'selected' : '' }}>Incidente</option>
+                                <option value="Problema"  {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Problema'  ? 'selected' : '' }}>Problema</option>
+                                <option value="Tarea"     {{ old('tipo_ticket', $ticket->tipo_ticket) == 'Tarea'     ? 'selected' : '' }}>Tarea</option>
+                            </select>
+                        </div>
+
+                        {{-- Prioridad --}}
+                        <div>
+                            <label for="prioridad" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Prioridad
+                            </label>
+                            <select name="prioridad" id="prioridad"
+                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                <option value="">Selecciona una prioridad</option>
+                                <option value="Baja"    {{ old('prioridad', $ticket->prioridad) == 'Baja'    ? 'selected' : '' }}>Baja</option>
+                                <option value="Media"   {{ old('prioridad', $ticket->prioridad) == 'Media'   ? 'selected' : '' }}>Media</option>
+                                <option value="Alta"    {{ old('prioridad', $ticket->prioridad) == 'Alta'    ? 'selected' : '' }}>Alta</option>
+                                <option value="Urgente" {{ old('prioridad', $ticket->prioridad) == 'Urgente' ? 'selected' : '' }}>Urgente</option>
+                            </select>
+                        </div>
+
+                        {{-- Estado --}}
+                        <div>
+                            <label for="estado" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Estado
+                            </label>
+                            <select name="estado" id="estado"
+                                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                                <option value="Nuevo"     {{ old('estado', $ticket->estado) == 'Nuevo'     ? 'selected' : '' }}>Nuevo</option>
+                                <option value="Abierto"   {{ old('estado', $ticket->estado) == 'Abierto'   ? 'selected' : '' }}>Abierto</option>
+                                <option value="Pendiente" {{ old('estado', $ticket->estado) == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                <option value="Resuelto"  {{ old('estado', $ticket->estado) == 'Resuelto'  ? 'selected' : '' }}>Resuelto</option>
+                                @if($estados->isNotEmpty())
+                                    <optgroup label="─ Personalizados ─">
+                                    @foreach($estados as $estadoCustom)
+                                        <option value="{{ $estadoCustom->nombre_agente }}"
+                                            {{ old('estado', $ticket->estado) == $estadoCustom->nombre_agente ? 'selected' : '' }}>
+                                            {{ $estadoCustom->nombre_agente }}
+                                        </option>
+                                    @endforeach
+                                    </optgroup>
+                                @endif
+                            </select>
+                        </div>
+
+                        {{-- Fecha resolución --}}
+                        <div>
+                            <label for="fecha_resolucion" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                Fecha de resolución
+                                <span class="ml-1 normal-case font-normal text-gray-400">(opcional)</span>
+                            </label>
+                            <div class="relative">
+                                <input type="date" id="fecha_resolucion" name="fecha_resolucion"
+                                    value="{{ old('fecha_resolucion', optional($ticket->fecha_resolucion)->format('Y-m-d')) }}"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 pr-10 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+                                <button type="button"
+                                    onclick="const i=document.getElementById('fecha_resolucion');if(typeof i.showPicker==='function'){i.showPicker();}else{i.focus();i.click();}"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {{-- Card adjuntos --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Archivos adjuntos</h3>
+                    </div>
+                    <div class="p-4 space-y-3">
+
+                        {{-- Adjuntos existentes --}}
+                        @php $adjuntos = is_array($ticket->adjuntos) ? $ticket->adjuntos : []; @endphp
+                        @if (!empty($adjuntos))
+                        <ul class="space-y-2">
+                            @foreach ($adjuntos as $a)
+                            <li class="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2 dark:border-gray-800">
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-xs font-medium text-gray-700 dark:text-gray-300">
+                                        {{ $a['nombre_original'] ?? 'Archivo' }}
+                                    </p>
+                                    @if (!empty($a['tamano']))
+                                    <p class="text-xs text-gray-400">{{ round($a['tamano'] / 1024, 1) }} KB</p>
+                                    @endif
+                                </div>
+                                @if (!empty($a['ruta']))
+                                <a href="{{ asset('storage/' . $a['ruta']) }}" target="_blank" rel="noopener"
+                                    class="ml-2 shrink-0 text-xs font-medium text-brand-600 hover:underline dark:text-brand-400">
+                                    Ver
+                                </a>
+                                @endif
+                            </li>
+                            @endforeach
+                        </ul>
+                        <div class="border-t border-gray-100 dark:border-gray-800"></div>
                         @endif
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
 
-            {{-- Adjuntar nuevos --}}
-            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                <label for="adjuntos"
-                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Agregar nuevos adjuntos (opcional)
-                </label>
+                        {{-- Agregar nuevos --}}
+                        <div>
+                            <p class="mb-2 text-xs text-gray-500 dark:text-gray-400">Agregar nuevos (opcional)</p>
+                            <input type="file" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                                class="block w-full text-sm text-gray-800
+                                       file:mr-3 file:rounded-lg file:border-0
+                                       file:bg-gray-100 file:px-3 file:py-1.5
+                                       file:text-xs file:font-medium file:text-gray-700
+                                       hover:file:bg-gray-200
+                                       dark:text-white/90 dark:file:bg-gray-800 dark:file:text-gray-300" />
+                            <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-600">JPG, PNG, PDF, DOC, DOCX</p>
+                        </div>
+                    </div>
+                </div>
 
-                <input
-                    type="file"
-                    id="adjuntos"
-                    name="adjuntos[]"
-                    multiple
-                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                    class="block w-full text-sm text-gray-800 
-                               file:mr-4 file:rounded-lg file:border-0 
-                               file:bg-gray-100 file:px-4 file:py-2 
-                               file:text-sm file:font-medium file:text-gray-700
-                               hover:file:bg-gray-200
-                               dark:text-white/90 dark:file:bg-gray-800 dark:file:text-gray-300" />
-
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Formatos permitidos: JPG, PNG, PDF, DOC, DOCX.
-                </p>
             </div>
 
-            <div>
-                <x-ui.button size="sm" variant="primary" type="submit" class="mt-4">
-                    Actualizar Ticket
-                </x-ui.button>
+            {{-- ════════════════════════════════
+                 COLUMNA DERECHA — Contenido
+            ════════════════════════════════ --}}
+            <div class="flex-1 min-w-0">
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900 flex flex-col">
+
+                    {{-- Asunto --}}
+                    <div class="border-b border-gray-100 px-5 py-3 dark:border-gray-800">
+                        <input type="text" id="asunto" name="asunto"
+                            value="{{ old('asunto', $ticket->asunto) }}"
+                            placeholder="Asunto"
+                            class="w-full bg-transparent text-base font-medium text-gray-800 placeholder:text-gray-400 focus:outline-none dark:text-white/90 dark:placeholder:text-white/30" />
+                    </div>
+
+                    {{-- Descripción --}}
+                    <div class="flex-1 px-5 py-4">
+                        <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                            Descripción
+                        </label>
+                        <textarea name="descripcion" id="descripcion"
+                            placeholder="Describe el problema o solicitud..."
+                            class="w-full bg-transparent text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none dark:text-white/90 dark:placeholder:text-white/30 resize-none"
+                            style="min-height: 180px">{{ old('descripcion', $ticket->descripcion) }}</textarea>
+                    </div>
+
+                    {{-- Observaciones --}}
+                    <div class="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
+                        <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                            Observaciones internas
+                        </label>
+                        <textarea name="observaciones" id="observaciones"
+                            placeholder="Notas internas visibles solo para agentes..."
+                            class="w-full bg-transparent text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none dark:text-white/90 dark:placeholder:text-white/30 resize-none"
+                            style="min-height: 100px">{{ old('observaciones', $ticket->observaciones) }}</textarea>
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="flex items-center justify-between border-t border-gray-100 px-5 py-3 dark:border-gray-800">
+                        <a href="{{ route('tickets.index') }}"
+                            class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            Cancelar
+                        </a>
+                        <x-ui.button size="sm" variant="primary" type="submit">
+                            Guardar cambios
+                        </x-ui.button>
+                    </div>
+
+                </div>
             </div>
 
-        </form>
-    </x-common.component-card>
+        </div>
+    </form>
 </div>
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const opts = {
-            create: false,
-            allowEmptyOption: true,
-            placeholder: 'Selecciona una opción',
-        };
+        const opts = { create: false, allowEmptyOption: true };
 
         if (document.querySelector('#id_ciudadano') && !document.querySelector('#id_ciudadano')?.tomselect) {
-            new TomSelect('#id_ciudadano', {
-                ...opts,
-                placeholder: 'Selecciona un ciudadano'
-            });
+            new TomSelect('#id_ciudadano', { ...opts, placeholder: 'Selecciona un ciudadano' });
         }
-
         if (document.querySelector('#id_agente_asignado') && !document.querySelector('#id_agente_asignado')?.tomselect) {
-            new TomSelect('#id_agente_asignado', {
-                ...opts,
-                placeholder: 'Selecciona un agente (opcional)'
-            });
+            new TomSelect('#id_agente_asignado', { ...opts, placeholder: '–' });
         }
-
         if (document.querySelector('#id_direccion_municipal') && !document.querySelector('#id_direccion_municipal')?.tomselect) {
-            new TomSelect('#id_direccion_municipal', {
-                ...opts,
-                placeholder: 'Selecciona una dirección'
-            });
+            new TomSelect('#id_direccion_municipal', { ...opts, placeholder: 'Selecciona una dirección' });
         }
-
         if (document.querySelector('#id_servicio') && !document.querySelector('#id_servicio')?.tomselect) {
-            new TomSelect('#id_servicio', {
-                ...opts,
-                placeholder: 'Selecciona un servicio'
-            });
+            new TomSelect('#id_servicio', { ...opts, placeholder: 'Selecciona un servicio' });
         }
-        /*
-        // Lógica estado según agente en edit
-        const agenteTs = document.querySelector('#id_agente_asignado')?.tomselect;
-        const estadoEl = document.getElementById('estado');
-        const estadoHint = document.getElementById('estado-hint');
-
-        if (agenteTs && estadoEl) {
-            // Estado inicial: si ya tiene agente asignado, deshabilitar estado
-            if (agenteTs.getValue()) {
-                estadoEl.disabled = true;
-                estadoHint?.classList.remove('hidden');
-            }
-
-            agenteTs.on('change', (val) => {
-                if (val) {
-                    // Solo forzar a Abierto si el estado actual es Nuevo
-                    if (estadoEl.value === 'Nuevo') {
-                        estadoEl.value = 'Abierto';
-                    }
-                    estadoEl.disabled = true;
-                    estadoHint?.classList.remove('hidden');
-                } else {
-                    estadoEl.disabled = false;
-                    estadoHint?.classList.add('hidden');
-                }
-            });
-        }
-            */
     });
 </script>
 @endpush
