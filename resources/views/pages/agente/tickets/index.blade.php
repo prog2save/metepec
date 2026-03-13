@@ -9,6 +9,9 @@
             Listado completo de tickets que tienes asignados.
         </p>
     </div>
+    @if (session('success'))
+    <x-ui.alert variant="success" title="{{ session('success') }}" message="" :showLink="false" linkHref="/" linkText="" />
+    @endif
     <a href="{{ route('agente.tickets.create') }}"
         class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors">
         + Nuevo ticket
@@ -39,15 +42,37 @@
             <div x-show="open" @click.outside="open = false" x-transition
                 class="absolute left-0 z-50 mt-1 w-44 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-300">
-                    @foreach(['Nuevo', 'Abierto', 'Pendiente', 'Resuelto'] as $estado)
+
+                    {{-- Estados fijos del sistema --}}
+                    @foreach(['Nuevo', 'Abierto', 'Pendiente', 'Resuelto'] as $estadoFijo)
                     <li>
-                        <a href="{{ request()->fullUrlWithQuery(['estado' => $estado, 'page' => 1]) }}"
+                        <a href="{{ request()->fullUrlWithQuery(['estado' => $estadoFijo, 'page' => 1]) }}"
                             class="flex items-center px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/[0.05]
-                        {{ request('estado') === $estado ? 'text-brand-600 font-medium bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400' : '' }}">
-                            {{ $estado }}
+                                {{ request('estado') === $estadoFijo ? 'text-brand-600 font-medium bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400' : '' }}">
+                            {{ $estadoFijo }}
                         </a>
                     </li>
                     @endforeach
+
+                    {{-- Estados personalizados --}}
+                    @if($estados->isNotEmpty())
+                    <li class="border-t border-gray-100 px-4 py-1.5 dark:border-gray-700">
+                        <span class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                            Personalizados
+                        </span>
+                    </li>
+                    @foreach($estados as $estadoCustom)
+                    <li>
+                        <a href="{{ request()->fullUrlWithQuery(['estado' => $estadoCustom->nombre_agente, 'page' => 1]) }}"
+                            class="flex items-center px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/[0.05]
+                                {{ request('estado') === $estadoCustom->nombre_agente ? 'text-brand-600 font-medium bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400' : '' }}">
+                            {{ $estadoCustom->nombre_agente }}
+                        </a>
+                    </li>
+                    @endforeach
+                    @endif
+
+                    {{-- Borrar filtro --}}
                     @if(request('estado'))
                     <li class="border-t border-gray-100 dark:border-gray-700">
                         <a href="{{ request()->fullUrlWithQuery(['estado' => null, 'page' => 1]) }}"
@@ -56,6 +81,7 @@
                         </a>
                     </li>
                     @endif
+
                 </ul>
             </div>
         </div>
@@ -152,7 +178,10 @@
 
                     {{-- Asunto --}}
                     <td class="px-4 sm:px-6 py-3.5">
-                        <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ $t->asunto }}</p>
+                        <a href="{{ route('agente.tickets.show', $t->id) }}"
+                            class="text-theme-sm font-medium text-brand-500 hover:underline dark:text-brand-400">
+                            {{ $t->asunto }}
+                        </a>
                     </td>
 
                     {{-- Solicitante --}}
@@ -231,7 +260,7 @@
             paging: true,
             perPage: 30,
             columns: [{
-                    select: [7, 8 , 9],
+                    select: [7, 8, 9],
                     sortable: false
                 } // Acciones y Completar sin ordenamiento
             ],

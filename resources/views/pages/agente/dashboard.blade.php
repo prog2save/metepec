@@ -85,7 +85,10 @@
 
                     {{-- Asunto --}}
                     <td class="px-4 py-3.5">
-                        <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ $t->asunto }}</p>
+                        <a href="{{ route('agente.tickets.show', $t->id) }}"
+                            class="text-theme-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+                            {{ $t->asunto }}
+                        </a>
                     </td>
 
                     {{-- Solicitante --}}

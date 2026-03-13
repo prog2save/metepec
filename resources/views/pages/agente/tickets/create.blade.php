@@ -176,8 +176,9 @@
                             <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                 Solicitante
                             </label>
+
                             <select id="id_ciudadano" name="id_ciudadano" class="w-full">
-                                <option value="">Selecciona un ciudadano</option>
+                                <option value="">Selecciona un solicitante</option>
                                 @foreach($ciudadanos as $c)
                                 <option value="{{ $c->id }}" {{ old('id_ciudadano') == $c->id ? 'selected' : '' }}>
                                     {{ $c->nombre }} {{ $c->apellido_paterno }} {{ $c->apellido_materno }}
@@ -186,6 +187,7 @@
                             </select>
                         </div>
 
+
                         {{-- Agente --}}
                         <div>
                             <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
@@ -193,7 +195,7 @@
                                 <span class="ml-1 normal-case font-normal text-gray-400">(opcional)</span>
                             </label>
                             <select id="id_agente_asignado" name="id_agente_asignado" class="w-full">
-                                <option value="">–</option>
+                                <option value="">Selecciona un agente</option>
                                 @foreach($agentes as $a)
                                 <option value="{{ $a->id }}" {{ old('id_agente_asignado') == $a->id ? 'selected' : '' }}>
                                     {{ $a->nombre }} {{ $a->apellido }}
@@ -415,6 +417,8 @@
     </form>
 </div>
 
+@include('components.ciudadanos.modal-crear')
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -424,9 +428,36 @@
         };
 
         if (document.querySelector('#id_ciudadano') && !document.querySelector('#id_ciudadano')?.tomselect) {
-            new TomSelect('#id_ciudadano', {
-                ...opts,
-                placeholder: 'Selecciona un ciudadano'
+            const tsCiudadano = new TomSelect('#id_ciudadano', {
+                create: false,
+                allowEmptyOption: true,
+                placeholder: 'Selecciona un solicitante',
+                onInitialize() {
+                    // Inyectar botón al final del dropdown
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-3.5 w-3.5 mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Crear nuevo ciudadano
+                    `;
+                    btn.className = `
+                        w-full text-left px-4 py-2.5 text-sm font-medium
+                        text-brand-600 dark:text-brand-400
+                        border-t border-gray-100 dark:border-gray-700
+                        hover:bg-brand-50 dark:hover:bg-brand-900/20
+                        transition-colors flex items-center
+                    `;
+                    btn.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.close();
+                        abrirModal('modalCrearCiudadano');
+                    });
+
+                    this.dropdown.appendChild(btn);
+                }
             });
         }
         if (document.querySelector('#id_agente_asignado') && !document.querySelector('#id_agente_asignado')?.tomselect) {

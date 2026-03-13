@@ -5,7 +5,7 @@
 
 @if (session('success'))
 <x-ui.alert variant="success" title="{{ session('success') }}" message="" :showLink="false" linkHref="/" linkText="" />
-@endif  
+@endif
 
 <style>
     #descripcion,
@@ -14,7 +14,9 @@
         resize: vertical;
     }
 
-    .ts-wrapper { width: 100%; }
+    .ts-wrapper {
+        width: 100%;
+    }
 
     .ts-control {
         height: 2.75rem;
@@ -29,49 +31,116 @@
         display: flex;
         align-items: center;
         gap: .5rem;
-        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0,0,0,.05));
+        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0, 0, 0, .05));
     }
+
     .dark .ts-control {
         border-color: rgb(55 65 81);
         background-color: rgb(17 24 39);
-        color: rgba(255,255,255,.90);
+        color: rgba(255, 255, 255, .90);
     }
-    .ts-control > input {
-        margin: 0 !important; padding: 0 !important;
-        font-size: .875rem !important; line-height: 1.25rem !important;
+
+    .ts-control>input {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: .875rem !important;
+        line-height: 1.25rem !important;
         color: rgb(31 41 55) !important;
         background-color: transparent !important;
         -webkit-text-fill-color: rgb(31 41 55) !important;
     }
-    .dark .ts-control > input {
-        color: rgba(255,255,255,.90) !important;
-        -webkit-text-fill-color: rgba(255,255,255,.90) !important;
+
+    .dark .ts-control>input {
+        color: rgba(255, 255, 255, .90) !important;
+        -webkit-text-fill-color: rgba(255, 255, 255, .90) !important;
     }
-    .ts-control .item[data-value=""], .ts-control input::placeholder { color: rgb(156 163 175) !important; }
-    .dark .ts-control .item[data-value=""], .dark .ts-control input::placeholder { color: rgba(255,255,255,.30) !important; }
-    .ts-wrapper.focus .ts-control, .ts-control:focus-within {
+
+    .ts-control .item[data-value=""],
+    .ts-control input::placeholder {
+        color: rgb(156 163 175) !important;
+    }
+
+    .dark .ts-control .item[data-value=""],
+    .dark .ts-control input::placeholder {
+        color: rgba(255, 255, 255, .30) !important;
+    }
+
+    .ts-wrapper.focus .ts-control,
+    .ts-control:focus-within {
         outline: none;
         border-color: rgb(147 197 253);
-        box-shadow: 0 0 0 3px rgba(59,130,246,.10);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
         background-color: transparent !important;
     }
-    .dark .ts-wrapper.focus .ts-control, .dark .ts-control:focus-within { border-color: rgb(30 64 175); background-color: rgb(17 24 39) !important; }
-    .ts-control { background-color: transparent !important; }
-    .dark .ts-control { background-color: rgb(17 24 39) !important; }
-    .ts-control .ts-dropdown-toggle { margin-left: auto; opacity: .7; background: transparent !important; }
-    .ts-dropdown {
-        margin-top: .25rem; border-radius: .5rem;
-        border: 1px solid rgb(229 231 235); background: #fff;
-        overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,.08); z-index: 50;
+
+    .dark .ts-wrapper.focus .ts-control,
+    .dark .ts-control:focus-within {
+        border-color: rgb(30 64 175);
+        background-color: rgb(17 24 39) !important;
     }
-    .dark .ts-dropdown { border-color: rgb(55 65 81); background: rgb(17 24 39); }
-    .ts-dropdown .ts-dropdown-content { max-height: 15rem; overflow: auto; }
-    .ts-dropdown .option { padding: .5rem 1rem; font-size: .875rem; cursor: pointer; color: rgb(55 65 81); }
-    .dark .ts-dropdown .option { color: rgb(229 231 235); }
-    .ts-dropdown .option.active { background: rgb(243 244 246); }
-    .dark .ts-dropdown .option.active { background: rgb(31 41 55); }
-    .ts-dropdown .option.selected { background: rgba(59,130,246,.08); color: rgb(29 78 216); }
-    .dark .ts-dropdown .option.selected { background: rgb(31 41 55); color: rgba(255,255,255,.90); }
+
+    .ts-control {
+        background-color: transparent !important;
+    }
+
+    .dark .ts-control {
+        background-color: rgb(17 24 39) !important;
+    }
+
+    .ts-control .ts-dropdown-toggle {
+        margin-left: auto;
+        opacity: .7;
+        background: transparent !important;
+    }
+
+    .ts-dropdown {
+        margin-top: .25rem;
+        border-radius: .5rem;
+        border: 1px solid rgb(229 231 235);
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, .08);
+        z-index: 50;
+    }
+
+    .dark .ts-dropdown {
+        border-color: rgb(55 65 81);
+        background: rgb(17 24 39);
+    }
+
+    .ts-dropdown .ts-dropdown-content {
+        max-height: 15rem;
+        overflow: auto;
+    }
+
+    .ts-dropdown .option {
+        padding: .5rem 1rem;
+        font-size: .875rem;
+        cursor: pointer;
+        color: rgb(55 65 81);
+    }
+
+    .dark .ts-dropdown .option {
+        color: rgb(229 231 235);
+    }
+
+    .ts-dropdown .option.active {
+        background: rgb(243 244 246);
+    }
+
+    .dark .ts-dropdown .option.active {
+        background: rgb(31 41 55);
+    }
+
+    .ts-dropdown .option.selected {
+        background: rgba(59, 130, 246, .08);
+        color: rgb(29 78 216);
+    }
+
+    .dark .ts-dropdown .option.selected {
+        background: rgb(31 41 55);
+        color: rgba(255, 255, 255, .90);
+    }
 </style>
 
 <div class="space-y-4">
@@ -230,10 +299,10 @@
                             <select name="tipo_ticket" id="tipo_ticket"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                 <option value="">Selecciona un tipo</option>
-                                <option value="Pregunta"  {{ old('tipo_ticket') == 'Pregunta'  ? 'selected' : '' }}>Pregunta</option>
+                                <option value="Pregunta" {{ old('tipo_ticket') == 'Pregunta'  ? 'selected' : '' }}>Pregunta</option>
                                 <option value="Incidente" {{ old('tipo_ticket') == 'Incidente' ? 'selected' : '' }}>Incidente</option>
-                                <option value="Problema"  {{ old('tipo_ticket') == 'Problema'  ? 'selected' : '' }}>Problema</option>
-                                <option value="Tarea"     {{ old('tipo_ticket') == 'Tarea'     ? 'selected' : '' }}>Tarea</option>
+                                <option value="Problema" {{ old('tipo_ticket') == 'Problema'  ? 'selected' : '' }}>Problema</option>
+                                <option value="Tarea" {{ old('tipo_ticket') == 'Tarea'     ? 'selected' : '' }}>Tarea</option>
                             </select>
                         </div>
 
@@ -245,9 +314,9 @@
                             <select name="prioridad" id="prioridad"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                 <option value="">Selecciona una prioridad</option>
-                                <option value="Baja"    {{ old('prioridad') == 'Baja'    ? 'selected' : '' }}>Baja</option>
-                                <option value="Media"   {{ old('prioridad') == 'Media'   ? 'selected' : '' }}>Media</option>
-                                <option value="Alta"    {{ old('prioridad') == 'Alta'    ? 'selected' : '' }}>Alta</option>
+                                <option value="Baja" {{ old('prioridad') == 'Baja'    ? 'selected' : '' }}>Baja</option>
+                                <option value="Media" {{ old('prioridad') == 'Media'   ? 'selected' : '' }}>Media</option>
+                                <option value="Alta" {{ old('prioridad') == 'Alta'    ? 'selected' : '' }}>Alta</option>
                                 <option value="Urgente" {{ old('prioridad') == 'Urgente' ? 'selected' : '' }}>Urgente</option>
                             </select>
                         </div>
@@ -259,19 +328,19 @@
                             </label>
                             <select name="estado" id="estado"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-60 disabled:cursor-not-allowed">
-                                <option value="Nuevo"     {{ old('estado', 'Nuevo') == 'Nuevo'     ? 'selected' : '' }}>Nuevo</option>
-                                <option value="Abierto"   {{ old('estado') == 'Abierto'             ? 'selected' : '' }}>Abierto</option>
+                                <option value="Nuevo" {{ old('estado', 'Nuevo') == 'Nuevo'     ? 'selected' : '' }}>Nuevo</option>
+                                <option value="Abierto" {{ old('estado') == 'Abierto'             ? 'selected' : '' }}>Abierto</option>
                                 <option value="Pendiente" {{ old('estado') == 'Pendiente'           ? 'selected' : '' }}>Pendiente</option>
-                                <option value="Resuelto"  {{ old('estado') == 'Resuelto'            ? 'selected' : '' }}>Resuelto</option>
+                                <option value="Resuelto" {{ old('estado') == 'Resuelto'            ? 'selected' : '' }}>Resuelto</option>
                                 @if($estados->isNotEmpty())
-                                    <optgroup label="─ Personalizados ─">
+                                <optgroup label="─ Personalizados ─">
                                     @foreach($estados as $estadoCustom)
-                                        <option value="{{ $estadoCustom->nombre_agente }}"
-                                            {{ old('estado', '') == $estadoCustom->nombre_agente ? 'selected' : '' }}>
-                                            {{ $estadoCustom->nombre_agente }}
-                                        </option>
+                                    <option value="{{ $estadoCustom->nombre_agente }}"
+                                        {{ old('estado', '') == $estadoCustom->nombre_agente ? 'selected' : '' }}>
+                                        {{ $estadoCustom->nombre_agente }}
+                                    </option>
                                     @endforeach
-                                    </optgroup>
+                                </optgroup>
                                 @endif
                             </select>
                         </div>
@@ -371,6 +440,8 @@
     </form>
 </div>
 
+@include('components.ciudadanos.modal-crear')
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -380,16 +451,46 @@
         };
 
         if (document.querySelector('#id_ciudadano') && !document.querySelector('#id_ciudadano')?.tomselect) {
-            new TomSelect('#id_ciudadano', { ...opts, placeholder: 'Selecciona un ciudadano' });
+            const tsCiudadano = new TomSelect('#id_ciudadano', {
+                ...opts,
+                placeholder: 'Selecciona un ciudadano',
+                onInitialize() {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-3.5 w-3.5 mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Crear nuevo ciudadano
+            `;
+                    btn.className = 'w-full text-left px-4 py-2.5 text-sm font-medium text-brand-600 dark:text-brand-400 border-t border-gray-100 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors flex items-center';
+                    btn.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.close();
+                        abrirModal('modalCrearCiudadano');
+                    });
+                    this.dropdown.appendChild(btn);
+                }
+            });
         }
         if (document.querySelector('#id_agente_asignado') && !document.querySelector('#id_agente_asignado')?.tomselect) {
-            new TomSelect('#id_agente_asignado', { ...opts, placeholder: '–' });
+            new TomSelect('#id_agente_asignado', {
+                ...opts,
+                placeholder: '–'
+            });
         }
         if (document.querySelector('#id_direccion_municipal') && !document.querySelector('#id_direccion_municipal')?.tomselect) {
-            new TomSelect('#id_direccion_municipal', { ...opts, placeholder: 'Selecciona una dirección' });
+            new TomSelect('#id_direccion_municipal', {
+                ...opts,
+                placeholder: 'Selecciona una dirección'
+            });
         }
         if (document.querySelector('#id_servicio') && !document.querySelector('#id_servicio')?.tomselect) {
-            new TomSelect('#id_servicio', { ...opts, placeholder: 'Selecciona un servicio' });
+            new TomSelect('#id_servicio', {
+                ...opts,
+                placeholder: 'Selecciona un servicio'
+            });
         }
 
         // Lógica estado según agente

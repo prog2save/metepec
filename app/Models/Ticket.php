@@ -42,7 +42,7 @@ class Ticket extends Model
 
     public function agente()
     {
-        return $this->belongsTo(Usuario::class, 'id_agente_asignado'); // o User::class
+        return $this->belongsTo(Usuario::class, 'id_agente_asignado'); 
     }
 
     public function servicio()
@@ -54,8 +54,13 @@ class Ticket extends Model
         return $this->belongsTo(CanalIngreso::class, 'id_canal');
     }
 
-    public function estado() 
+    public function estado()
     {
         return $this->belongsTo(EstadoTicket::class, 'id_estado');
+    }
+
+    public function respuestas()
+    {
+        return $this->hasMany(TicketRespuesta::class, 'id_ticket')->orderBy('created_at');
     }
 }

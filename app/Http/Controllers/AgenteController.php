@@ -12,6 +12,8 @@ use App\Models\Ciudadano;
 use App\Models\DireccionMunicipal;
 use App\Models\Servicio;
 use App\Models\Usuario;
+use App\Models\TicketRespuesta;
+use App\Models\EstadoTicket;
 
 class AgenteController extends Controller
 {
@@ -53,9 +55,10 @@ class AgenteController extends Controller
         }
 
         $tickets = $query->latest()->paginate(15)->withQueryString();
-        $canales = CanalIngreso::orderBy('nombre')->get(); // para filtro
+        $canales = CanalIngreso::orderBy('nombre')->get();
+        $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
 
-        return view('pages.agente.tickets.index', compact('tickets', 'canales'));
+        return view('pages.agente.tickets.index', compact('tickets', 'canales', 'estados'));
     }
 
     public function resolver(Ticket $ticket)
@@ -105,20 +108,79 @@ class AgenteController extends Controller
 
         Ticket::create($input);
 
+        if ($request->wantsJson()) {
+            return response()->json($request, 201);
+        }
+
         return redirect()->route('agente.tickets.index')->with('success', 'Ticket creado exitosamente.');
     }
 
     public function ciudadanoCreate()
     {
-        return view('pages.agente.ciudadanos.create'); 
+        return view('pages.agente.ciudadanos.create');
     }
 
     // Guardar nuevo ciudadano
     public function ciudadanoStore(CiudadanoStore $request)
     {
         $input = $request->validated();
-        Ciudadano::create($input);
+        $ciudadano = Ciudadano::create($input);
+
+        if ($request->wantsJson()) {
+            return response()->json($ciudadano, 201);
+        }
+
         return redirect()->route('agente.tickets.create')
             ->with('success', 'Ciudadano creado exitosamente.');
+    }
+
+    public function show(string $id)
+    {
+        $ticket = Ticket::with([
+            'ciudadano',
+            'agente',
+            'respuestas.usuario'
+        ])->findOrFail($id);
+
+        $agentes = Usuario::select('id', 'nombre', 'apellido')->orderBy('nombre')->get();
+        $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
+        $direcciones = DireccionMunicipal::select('id', 'nombre_direccion')->where('estatus', true)->orderBy('nombre_direccion')->get();
+        $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')->where('activo', true)->orderBy('nombre_servicio')->get();
+
+        return view('pages.agente.tickets.show', compact('ticket', 'agentes', 'estados', 'direcciones', 'servicios'));
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $ticket = Ticket::findOrFail($id);
+
+        $ticket->update($request->only([
+            'id_agente_asignado',
+            'estado',
+            'prioridad',
+            'tipo_ticket',
+            'id_direccion_municipal',
+            'id_servicio',
+        ]));
+
+        return redirect()->route('agente.tickets.index')
+            ->with('success', 'Ticket actualizado exitosamente.');
+    }
+
+    public function responder(Request $request, string $id)
+    {
+        $request->validate([
+            'contenido' => ['required', 'string', 'max:2000'],
+            'tipo'      => ['in:respuesta,nota_interna'],
+        ]);
+
+        TicketRespuesta::create([
+            'id_ticket'  => $id,
+            'id_usuario' => Auth::id(),
+            'contenido'  => $request->contenido,
+            'tipo'       => $request->tipo ?? 'respuesta',
+        ]);
+
+        return back()->with('success', 'Respuesta enviada.');
     }
 }

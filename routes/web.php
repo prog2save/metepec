@@ -91,11 +91,15 @@ Route::middleware('auth')->group(function () {
     Route::prefix('agente')->name('agente.')->group(function () {
         Route::get('/dashboard', [AgenteController::class, 'dashboard'])->name('dashboard');
         Route::get('/tickets',   [AgenteController::class, 'tickets'])->name('tickets.index');
-        Route::put('/tickets/{ticket}/resolver', [AgenteController::class, 'resolver'])->name('tickets.resolver');
-        Route::get('/tickets/create', [AgenteController::class, 'create'])->name('tickets.create'); // ← nueva
+        Route::get('/tickets/create', [AgenteController::class, 'create'])->name('tickets.create'); 
         Route::post('/tickets', [AgenteController::class, 'store'])->name('tickets.store');
+        Route::put('/tickets/{ticket}/resolver', [AgenteController::class, 'resolver'])->name('tickets.resolver');
         Route::get('/ciudadanos/create', [AgenteController::class, 'ciudadanoCreate'])->name('ciudadanos.create');
         Route::post('/ciudadanos', [AgenteController::class, 'ciudadanoStore'])->name('ciudadanos.store');
+        Route::get('tickets/{id}', [AgenteController::class, 'show'])->name('tickets.show');
+        Route::patch('tickets/{id}', [AgenteController::class, 'update'])->name('tickets.update');
+        Route::post('tickets/{id}/responder', [AgenteController::class, 'responder'])->name('tickets.responder');
+        Route::post('/agente/ciudadanos', [AgenteController::class, 'ciudadanoStore'])->name('agente.ciudadanos.store');
     });
 });
 

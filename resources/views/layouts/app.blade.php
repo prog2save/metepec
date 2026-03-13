@@ -18,7 +18,6 @@
 
     <!-- Theme Store -->
     <script>
-        
         document.addEventListener('alpine:init', () => {
             Alpine.store('theme', {
                 init() {
@@ -93,7 +92,7 @@
             }
         })();
     </script>
-    
+
 </head>
 
 <body
@@ -111,7 +110,7 @@
     window.addEventListener('resize', checkMobile);">
 
     {{-- preloader --}}
-    <x-common.preloader/>
+    <x-common.preloader />
     {{-- preloader end --}}
 
     <div class="min-h-screen xl:flex">
@@ -133,7 +132,29 @@
         </div>
 
     </div>
+
+    {{-- Modal portal target --}}
+    <div id="modal-portal"></div>
+
+
+    <script>
+        function abrirModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
     @stack('scripts')
+
 
 </body>
 
