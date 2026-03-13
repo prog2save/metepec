@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
         return view('pages.ui-elements.videos', ['title' => 'Videos']);
     })->name('videos');
 
+    Route::get('/usuarios/suspendidos', [UserController::class, 'suspendidos'])->name('usuarios.suspendidos');
+    Route::patch('/usuarios/{id}/reactivar', [UserController::class, 'reactivar'])->name('usuarios.reactivar');
     Route::resource('usuarios', UserController::class);
     Route::resource('ciudadanos', CiudadanoController::class);
     Route::resource('direcciones', DireccionMunicipalController::class);

@@ -14,7 +14,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $usuarios =  Usuario::orderBy('id', 'desc')->paginate(10);
+        $usuarios = Usuario::where('activo', true)
+            ->orderBy('id', 'desc')
+            ->get();
         return view('pages.users.index', compact('usuarios'));
     }
 
@@ -72,17 +74,36 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        // Evitar que el usuario se borre a sí mismo
         $usuario = Usuario::findOrFail($id);
 
         if (Auth::id() === $usuario->id) {
-            return back()->withErrors(['usuario' => 'No puedes eliminar tu propio usuario.']);
+            return back()->withErrors(['usuario' => 'No puedes suspenderte a ti mismo.']);
         }
 
-        $usuario->delete();
+        $usuario->activo = false;
+        $usuario->suspendido_por = Auth::user()->nombre . ' ' . Auth::user()->apellido;
+        $usuario->save();
 
-        return redirect()->back()->with('success', 'Usuario eliminado exitosamente.');
+        return redirect()->back()->with('success', 'Usuario suspendido exitosamente.');
+    }
+
+    public function reactivar(string $id)
+    {
+        $usuario = Usuario::findOrFail($id);
+        $usuario->activo = true;
+        $usuario->save();
+
+        return redirect()->back()->with('success', 'Usuario reactivado exitosamente.');
+    }
+
+    public function suspendidos()
+    {
+        $usuarios = Usuario::where('activo', false)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('pages.users.index-suspendidos', compact('usuarios'));
     }
 }

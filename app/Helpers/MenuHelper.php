@@ -46,8 +46,9 @@ class MenuHelper
                 'name' => 'Usuarios',
                 'path' => '/usuarios',
                 'subItems' => [
-                    ['name' => 'Lista', 'path' => '/usuarios/'],
-                    ['name' => 'Alta', 'path' => '/usuarios/create'],
+                    ['name' => 'Usuarios activos', 'path' => '/usuarios/'],
+                    ['name' => 'Usuarios suspendidos', 'path' => '/usuarios/suspendidos'],
+                    ['name' => 'Alta', 'path' => '/usuarios/create']
                 ],
             ],
             [
