@@ -4,37 +4,127 @@
 <x-common.page-breadcrumb pageTitle="Ticket #{{ $ticket->id }}" />
 
 <style>
-    .ts-wrapper { width: 100%; }
-    .ts-control {
-        height: 2.75rem; width: 100%; border-radius: .5rem;
-        border: 1px solid rgb(209 213 219); background: transparent;
-        padding: .625rem 1rem; font-size: .875rem; line-height: 1.25rem;
-        color: rgb(31 41 55); display: flex; align-items: center; gap: .5rem;
-        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0,0,0,.05));
+    .ts-wrapper {
+        width: 100%;
     }
-    .ts-control > input {
-        margin: 0 !important; padding: 0 !important;
-        font-size: .875rem !important; line-height: 1.25rem !important;
-        color: rgb(31 41 55) !important; background-color: transparent !important;
+
+    .ts-control {
+        height: 2.75rem;
+        width: 100%;
+        border-radius: .5rem;
+        border: 1px solid rgb(209 213 219);
+        background: transparent;
+        padding: .625rem 1rem;
+        font-size: .875rem;
+        line-height: 1.25rem;
+        color: rgb(31 41 55);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        box-shadow: var(--shadow-theme-xs, 0 1px 2px rgba(0, 0, 0, .05));
+    }
+
+    .ts-control>input {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: .875rem !important;
+        line-height: 1.25rem !important;
+        color: rgb(31 41 55) !important;
+        background-color: transparent !important;
         -webkit-text-fill-color: rgb(31 41 55) !important;
     }
-    .ts-control > input::placeholder { color: rgb(156 163 175) !important; }
-    .dark .ts-control { border-color: rgb(55 65 81); background-color: rgb(17 24 39) !important; color: rgba(255,255,255,.90); }
-    .dark .ts-control > input { color: rgba(255,255,255,.90) !important; -webkit-text-fill-color: rgba(255,255,255,.90) !important; }
-    .dark .ts-control > input::placeholder { color: rgba(255,255,255,.30) !important; }
-    .ts-control { background-color: transparent !important; }
-    .ts-wrapper.focus .ts-control, .ts-control:focus-within { outline: none; border-color: rgb(147 197 253); box-shadow: 0 0 0 3px rgba(59,130,246,.10); background-color: transparent !important; }
-    .dark .ts-wrapper.focus .ts-control, .dark .ts-control:focus-within { border-color: rgb(30 64 175); background-color: rgb(17 24 39) !important; }
-    .ts-control .ts-dropdown-toggle { margin-left: auto; opacity: .7; background: transparent !important; }
-    .ts-dropdown { margin-top: .25rem; border-radius: .5rem; border: 1px solid rgb(229 231 235); background: #fff; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,.08); z-index: 50; }
-    .dark .ts-dropdown { border-color: rgb(55 65 81); background: rgb(17 24 39); }
-    .ts-dropdown .ts-dropdown-content { max-height: 15rem; overflow: auto; }
-    .ts-dropdown .option { padding: .5rem 1rem; font-size: .875rem; cursor: pointer; color: rgb(55 65 81); }
-    .dark .ts-dropdown .option { color: rgb(229 231 235); }
-    .ts-dropdown .option.active { background: rgb(243 244 246); }
-    .dark .ts-dropdown .option.active { background: rgb(31 41 55); }
-    .ts-dropdown .option.selected { background: rgba(59,130,246,.08); color: rgb(29 78 216); }
-    .dark .ts-dropdown .option.selected { background: rgb(31 41 55); color: rgba(255,255,255,.90); }
+
+    .ts-control>input::placeholder {
+        color: rgb(156 163 175) !important;
+    }
+
+    .dark .ts-control {
+        border-color: rgb(55 65 81);
+        background-color: rgb(17 24 39) !important;
+        color: rgba(255, 255, 255, .90);
+    }
+
+    .dark .ts-control>input {
+        color: rgba(255, 255, 255, .90) !important;
+        -webkit-text-fill-color: rgba(255, 255, 255, .90) !important;
+    }
+
+    .dark .ts-control>input::placeholder {
+        color: rgba(255, 255, 255, .30) !important;
+    }
+
+    .ts-control {
+        background-color: transparent !important;
+    }
+
+    .ts-wrapper.focus .ts-control,
+    .ts-control:focus-within {
+        outline: none;
+        border-color: rgb(147 197 253);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .10);
+        background-color: transparent !important;
+    }
+
+    .dark .ts-wrapper.focus .ts-control,
+    .dark .ts-control:focus-within {
+        border-color: rgb(30 64 175);
+        background-color: rgb(17 24 39) !important;
+    }
+
+    .ts-control .ts-dropdown-toggle {
+        margin-left: auto;
+        opacity: .7;
+        background: transparent !important;
+    }
+
+    .ts-dropdown {
+        margin-top: .25rem;
+        border-radius: .5rem;
+        border: 1px solid rgb(229 231 235);
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, .08);
+        z-index: 50;
+    }
+
+    .dark .ts-dropdown {
+        border-color: rgb(55 65 81);
+        background: rgb(17 24 39);
+    }
+
+    .ts-dropdown .ts-dropdown-content {
+        max-height: 15rem;
+        overflow: auto;
+    }
+
+    .ts-dropdown .option {
+        padding: .5rem 1rem;
+        font-size: .875rem;
+        cursor: pointer;
+        color: rgb(55 65 81);
+    }
+
+    .dark .ts-dropdown .option {
+        color: rgb(229 231 235);
+    }
+
+    .ts-dropdown .option.active {
+        background: rgb(243 244 246);
+    }
+
+    .dark .ts-dropdown .option.active {
+        background: rgb(31 41 55);
+    }
+
+    .ts-dropdown .option.selected {
+        background: rgba(59, 130, 246, .08);
+        color: rgb(29 78 216);
+    }
+
+    .dark .ts-dropdown .option.selected {
+        background: rgb(31 41 55);
+        color: rgba(255, 255, 255, .90);
+    }
 </style>
 
 <div class="space-y-4">
@@ -109,19 +199,19 @@
                             </label>
                             <select name="estado" id="estado"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                                <option value="Nuevo"     {{ $ticket->estado == 'Nuevo'     ? 'selected' : '' }}>Nuevo</option>
-                                <option value="Abierto"   {{ $ticket->estado == 'Abierto'   ? 'selected' : '' }}>Abierto</option>
+                                <option value="Nuevo" {{ $ticket->estado == 'Nuevo'     ? 'selected' : '' }}>Nuevo</option>
+                                <option value="Abierto" {{ $ticket->estado == 'Abierto'   ? 'selected' : '' }}>Abierto</option>
                                 <option value="Pendiente" {{ $ticket->estado == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
-                                <option value="Resuelto"  {{ $ticket->estado == 'Resuelto'  ? 'selected' : '' }}>Resuelto</option>
+                                <option value="Resuelto" {{ $ticket->estado == 'Resuelto'  ? 'selected' : '' }}>Resuelto</option>
                                 @if($estados->isNotEmpty())
-                                    <optgroup label="─ Personalizados ─">
+                                <optgroup label="─ Personalizados ─">
                                     @foreach($estados as $estadoCustom)
-                                        <option value="{{ $estadoCustom->nombre_agente }}"
-                                            {{ $ticket->estado == $estadoCustom->nombre_agente ? 'selected' : '' }}>
-                                            {{ $estadoCustom->nombre_agente }}
-                                        </option>
+                                    <option value="{{ $estadoCustom->nombre_agente }}"
+                                        {{ $ticket->estado == $estadoCustom->nombre_agente ? 'selected' : '' }}>
+                                        {{ $estadoCustom->nombre_agente }}
+                                    </option>
                                     @endforeach
-                                    </optgroup>
+                                </optgroup>
                                 @endif
                             </select>
                         </div>
@@ -134,9 +224,9 @@
                             <select name="prioridad" id="prioridad"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                 <option value="">Sin prioridad</option>
-                                <option value="Baja"    {{ $ticket->prioridad == 'Baja'    ? 'selected' : '' }}>Baja</option>
-                                <option value="Media"   {{ $ticket->prioridad == 'Media'   ? 'selected' : '' }}>Media</option>
-                                <option value="Alta"    {{ $ticket->prioridad == 'Alta'    ? 'selected' : '' }}>Alta</option>
+                                <option value="Baja" {{ $ticket->prioridad == 'Baja'    ? 'selected' : '' }}>Baja</option>
+                                <option value="Media" {{ $ticket->prioridad == 'Media'   ? 'selected' : '' }}>Media</option>
+                                <option value="Alta" {{ $ticket->prioridad == 'Alta'    ? 'selected' : '' }}>Alta</option>
                                 <option value="Urgente" {{ $ticket->prioridad == 'Urgente' ? 'selected' : '' }}>Urgente</option>
                             </select>
                         </div>
@@ -149,10 +239,10 @@
                             <select name="tipo_ticket" id="tipo_ticket"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                                 <option value="">Sin tipo</option>
-                                <option value="Pregunta"  {{ $ticket->tipo_ticket == 'Pregunta'  ? 'selected' : '' }}>Pregunta</option>
+                                <option value="Pregunta" {{ $ticket->tipo_ticket == 'Pregunta'  ? 'selected' : '' }}>Pregunta</option>
                                 <option value="Incidente" {{ $ticket->tipo_ticket == 'Incidente' ? 'selected' : '' }}>Incidente</option>
-                                <option value="Problema"  {{ $ticket->tipo_ticket == 'Problema'  ? 'selected' : '' }}>Problema</option>
-                                <option value="Tarea"     {{ $ticket->tipo_ticket == 'Tarea'     ? 'selected' : '' }}>Tarea</option>
+                                <option value="Problema" {{ $ticket->tipo_ticket == 'Problema'  ? 'selected' : '' }}>Problema</option>
+                                <option value="Tarea" {{ $ticket->tipo_ticket == 'Tarea'     ? 'selected' : '' }}>Tarea</option>
                             </select>
                         </div>
 
@@ -328,6 +418,34 @@
                 </form>
             </div>
 
+            {{-- Adjuntos existentes --}}
+            @php $adjuntos = is_array($ticket->adjuntos) ? $ticket->adjuntos : []; @endphp
+            @if (!empty($adjuntos))
+            <ul class="space-y-2">
+                @foreach ($adjuntos as $a)
+                <li class="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2 dark:border-gray-800">
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-xs font-medium text-gray-700 dark:text-gray-300">
+                            {{ $a['nombre_original'] ?? 'Archivo' }}
+                        </p>
+                        @if (!empty($a['tamano']))
+                        <p class="text-xs text-gray-400">{{ round($a['tamano'] / 1024, 1) }} KB</p>
+                        @endif
+                    </div>
+                    @if (!empty($a['ruta']))
+                    <button
+                        type="button"
+                        onclick="abrirPreview('{{ asset('storage/' . $a['ruta']) }}', '{{ addslashes($a['nombre_original']) }}', '{{ $a['mime'] }}')"
+                        class="ml-2 shrink-0 text-xs font-medium text-brand-600 hover:underline dark:text-brand-400">
+                        Ver
+                    </button>
+                    @endif
+                </li>
+                @endforeach
+            </ul>
+            <div class="border-t border-gray-100 dark:border-gray-800"></div>
+            @endif
+
         </div>
 
         {{-- ════════════════════════════════
@@ -441,18 +559,31 @@
 </div>
 
 @push('scripts')
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const opts = { create: false, allowEmptyOption: true };
+        const opts = {
+            create: false,
+            allowEmptyOption: true
+        };
 
         if (document.querySelector('#id_agente_asignado') && !document.querySelector('#id_agente_asignado')?.tomselect) {
-            new TomSelect('#id_agente_asignado', { ...opts, placeholder: '–' });
+            new TomSelect('#id_agente_asignado', {
+                ...opts,
+                placeholder: '–'
+            });
         }
         if (document.querySelector('#id_direccion_municipal') && !document.querySelector('#id_direccion_municipal')?.tomselect) {
-            new TomSelect('#id_direccion_municipal', { ...opts, placeholder: 'Selecciona una dirección' });
+            new TomSelect('#id_direccion_municipal', {
+                ...opts,
+                placeholder: 'Selecciona una dirección'
+            });
         }
         if (document.querySelector('#id_servicio') && !document.querySelector('#id_servicio')?.tomselect) {
-            new TomSelect('#id_servicio', { ...opts, placeholder: 'Selecciona un servicio' });
+            new TomSelect('#id_servicio', {
+                ...opts,
+                placeholder: 'Selecciona un servicio'
+            });
         }
     });
 </script>

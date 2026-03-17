@@ -9,6 +9,10 @@ use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\AgenteController;
 use App\Http\Controllers\EstadoTicketController;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Auth;
 
 // Rutas publicas de autenticacion (solo para no autenticados)
 Route::middleware('guest')->group(function () {
@@ -24,8 +28,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
     Route::get('/', function () {
-        return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
-    })->name('dashboard');
+        $role = Auth::user()->role;
+
+        if ($role === 'agente') {
+            return redirect()->route('agente.dashboard');
+        }
+
+        return view('pages.dashboard.ecommerce', ['title' => 'Dashboard']);
+    })->middleware('auth')->name('dashboard');
 
     Route::get('/calendar', function () {
         return view('pages.calender', ['title' => 'Calendar']);
@@ -89,11 +99,26 @@ Route::middleware('auth')->group(function () {
     Route::resource('servicios', ServiciosController::class);
     Route::resource('estados', EstadoTicketController::class);
 
+    Route::get('/archivos/preview', function (Request $request) {
+        $path = $request->query('path');
+        $mime = $request->query('mime', 'application/octet-stream');
+
+        abort_unless(Storage::disk('private')->exists($path), 404);
+
+        $contenido = Storage::disk('private')->get($path);
+        $nombre    = basename($path);
+
+        return response($contenido, 200, [
+            'Content-Type'        => $mime,
+            'Content-Disposition' => 'inline; filename="' . $nombre . '"',
+        ]);
+    })->middleware(['auth', 'signed'])->name('archivo.preview');
+
     // Rutas para agentes
     Route::prefix('agente')->name('agente.')->group(function () {
         Route::get('/dashboard', [AgenteController::class, 'dashboard'])->name('dashboard');
         Route::get('/tickets',   [AgenteController::class, 'tickets'])->name('tickets.index');
-        Route::get('/tickets/create', [AgenteController::class, 'create'])->name('tickets.create'); 
+        Route::get('/tickets/create', [AgenteController::class, 'create'])->name('tickets.create');
         Route::post('/tickets', [AgenteController::class, 'store'])->name('tickets.store');
         Route::put('/tickets/{ticket}/resolver', [AgenteController::class, 'resolver'])->name('tickets.resolver');
         Route::get('/ciudadanos/create', [AgenteController::class, 'ciudadanoCreate'])->name('ciudadanos.create');

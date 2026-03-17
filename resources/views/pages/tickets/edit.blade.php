@@ -359,54 +359,6 @@
                     </div>
                 </div>
 
-                {{-- Card adjuntos --}}
-                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
-                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Archivos adjuntos</h3>
-                    </div>
-                    <div class="p-4 space-y-3">
-
-                        {{-- Adjuntos existentes --}}
-                        @php $adjuntos = is_array($ticket->adjuntos) ? $ticket->adjuntos : []; @endphp
-                        @if (!empty($adjuntos))
-                        <ul class="space-y-2">
-                            @foreach ($adjuntos as $a)
-                            <li class="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2 dark:border-gray-800">
-                                <div class="min-w-0 flex-1">
-                                    <p class="truncate text-xs font-medium text-gray-700 dark:text-gray-300">
-                                        {{ $a['nombre_original'] ?? 'Archivo' }}
-                                    </p>
-                                    @if (!empty($a['tamano']))
-                                    <p class="text-xs text-gray-400">{{ round($a['tamano'] / 1024, 1) }} KB</p>
-                                    @endif
-                                </div>
-                                @if (!empty($a['ruta']))
-                                <a href="{{ asset('storage/' . $a['ruta']) }}" target="_blank" rel="noopener"
-                                    class="ml-2 shrink-0 text-xs font-medium text-brand-600 hover:underline dark:text-brand-400">
-                                    Ver
-                                </a>
-                                @endif
-                            </li>
-                            @endforeach
-                        </ul>
-                        <div class="border-t border-gray-100 dark:border-gray-800"></div>
-                        @endif
-
-                        {{-- Agregar nuevos --}}
-                        <div>
-                            <p class="mb-2 text-xs text-gray-500 dark:text-gray-400">Agregar nuevos (opcional)</p>
-                            <input type="file" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                                class="block w-full text-sm text-gray-800
-                                       file:mr-3 file:rounded-lg file:border-0
-                                       file:bg-gray-100 file:px-3 file:py-1.5
-                                       file:text-xs file:font-medium file:text-gray-700
-                                       hover:file:bg-gray-200
-                                       dark:text-white/90 dark:file:bg-gray-800 dark:file:text-gray-300" />
-                            <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-600">JPG, PNG, PDF, DOC, DOCX</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
             {{-- ════════════════════════════════
@@ -435,7 +387,7 @@
                     </div>
 
                     {{-- Observaciones --}}
-                    <div class="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
+                    <div class="border-t border-gray-100 px-5 py-6 dark:border-gray-800">
                         <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
                             Observaciones internas
                         </label>
@@ -443,6 +395,56 @@
                             placeholder="Notas internas visibles solo para agentes..."
                             class="w-full bg-transparent text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none dark:text-white/90 dark:placeholder:text-white/30 resize-none"
                             style="min-height: 100px">{{ old('observaciones', $ticket->observaciones) }}</textarea>
+                    </div>
+
+                    {{-- Card adjuntos --}}
+                    <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900 py-1">
+                        <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Archivos adjuntos</h3>
+                        </div>
+                        <div class="p-4 space-y-3">
+
+                            {{-- Adjuntos existentes --}}
+                            @php $adjuntos = is_array($ticket->adjuntos) ? $ticket->adjuntos : []; @endphp
+                            @if (!empty($adjuntos))
+                            <ul class="space-y-2">
+                                @foreach ($adjuntos as $a)
+                                <li class="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2 dark:border-gray-800">
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            {{ $a['nombre_original'] ?? 'Archivo' }}
+                                        </p>
+                                        @if (!empty($a['tamano']))
+                                        <p class="text-xs text-gray-400">{{ round($a['tamano'] / 1024, 1) }} KB</p>
+                                        @endif
+                                    </div>
+                                    @if (!empty($a['ruta']))
+                                    <button
+                                        type="button"
+                                        onclick="abrirPreview('{{ asset('storage/' . $a['ruta']) }}', '{{ addslashes($a['nombre_original']) }}', '{{ $a['mime'] }}')"
+                                        class="ml-2 shrink-0 text-xs font-medium text-brand-600 hover:underline dark:text-brand-400">
+                                        Ver
+                                    </button>
+                                    @endif
+                                </li>
+                                @endforeach
+                            </ul>
+                            <div class="border-t border-gray-100 dark:border-gray-800"></div>
+                            @endif
+
+                            {{-- Agregar nuevos --}}
+                            <div>
+                                <p class="mb-2 text-xs text-gray-500 dark:text-gray-400">Agregar nuevos (opcional)</p>
+                                <input type="file" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                                    class="block w-full text-sm text-gray-800
+                                       file:mr-3 file:rounded-lg file:border-0
+                                       file:bg-gray-100 file:px-3 file:py-1.5
+                                       file:text-xs file:font-medium file:text-gray-700
+                                       hover:file:bg-gray-200
+                                       dark:text-white/90 dark:file:bg-gray-800 dark:file:text-gray-300" />
+                                <p class="mt-1.5 text-xs text-gray-400 dark:text-gray-600">JPG, PNG, PDF, DOC, DOCX</p>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Footer --}}
