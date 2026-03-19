@@ -96,6 +96,15 @@ class MenuHelper
                     ['name' => 'Todos los tickets', 'path' => '/tickets/'],
 
                 ],
+            ],
+            [
+                'icon' => 'vistas-icon',
+                'name' => 'Vistas',
+                'path' => '/vistas',
+                'subItems' => [
+                    ['name' => 'Vistas', 'path' => '/ticket-views'],
+                    ['name' => 'Crear Vista', 'path' => '/ticket-views/create'],
+                ],
             ]
         ];
     }

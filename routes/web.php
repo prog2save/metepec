@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TicketViewController;
 
 // Rutas publicas de autenticacion (solo para no autenticados)
 Route::middleware('guest')->group(function () {
@@ -99,6 +100,24 @@ Route::middleware('auth')->group(function () {
     Route::resource('servicios', ServiciosController::class);
     Route::resource('estados', EstadoTicketController::class);
 
+    Route::prefix('ticket-views')->name('ticket-views.')->group(function () {
+            Route::get('/',                  [TicketViewController::class, 'index'])->name('index');
+            Route::post('/',                 [TicketViewController::class, 'store'])->name('store');
+            Route::get('/create',            [TicketViewController::class, 'create'])->name('create');
+            Route::get('/{ticketView}',      [TicketViewController::class, 'show'])->name('show');
+            Route::get('/{ticketView}/edit', [TicketViewController::class, 'edit'])->name('edit');
+            Route::put('/{ticketView}',      [TicketViewController::class, 'update'])->name('update');
+            Route::delete('/{ticketView}',   [TicketViewController::class, 'destroy'])->name('destroy');
+            Route::patch('/reorder',              [TicketViewController::class, 'reorder'])->name('reorder');
+            Route::patch('/{id}/restore',         [TicketViewController::class, 'restore'])->name('restore');
+            Route::patch('/{ticketView}/toggle',  [TicketViewController::class, 'toggle'])->name('toggle');
+        });
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        
+    });
+
+
     Route::get('/archivos/preview', function (Request $request) {
         $path = $request->query('path');
         $mime = $request->query('mime', 'application/octet-stream');
@@ -127,6 +146,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('tickets/{id}', [AgenteController::class, 'update'])->name('tickets.update');
         Route::post('tickets/{id}/responder', [AgenteController::class, 'responder'])->name('tickets.responder');
         Route::post('/agente/ciudadanos', [AgenteController::class, 'ciudadanoStore'])->name('agente.ciudadanos.store');
+        Route::get('/ticket-views',  [TicketViewController::class, 'indexForAgent'])->name('ticket-views.index');
     });
 });
 
