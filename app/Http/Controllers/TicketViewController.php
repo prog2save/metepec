@@ -11,14 +11,24 @@ use App\Models\Ciudadano;
 use App\Models\EstadoTicket;
 use App\Models\CanalIngreso;
 use App\Models\Ticket;
+use App\Models\DireccionMunicipal;
 
 class TicketViewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $views = TicketView::with(['creator', 'conditions', 'columns', 'sorts'])
-            ->ordered()
-            ->paginate(20);
+        $query = TicketView::with(['creator', 'conditions', 'columns', 'sorts'])
+            ->ordered();
+
+        if ($request->filled('estado')) {
+            $query->where('active', $request->estado === 'activo');
+        }
+
+        if ($request->filled('visibilidad')) {
+            $query->where('visibility', $request->visibilidad);
+        }
+
+        $views = $query->paginate(20)->withQueryString();
 
         $deletedViews = TicketView::onlyTrashed()
             ->ordered()
@@ -40,6 +50,15 @@ class TicketViewController extends Controller
             ->map(fn($c) => [
                 'id'     => $c->id,
                 'nombre' => $c->nombre . ' ' . $c->apellido_paterno,
+            ]);
+
+        $direcciones = DireccionMunicipal::select('id', 'nombre_direccion', 'estatus')
+            ->where('estatus', true)
+            ->orderBy('nombre_direccion')
+            ->get()
+            ->map(fn($d) => [
+                'id'     => $d->id,
+                'nombre_direccion' => $d->nombre_direccion,
             ]);
 
         $agentes = Usuario::select('id', 'nombre', 'apellido')
@@ -72,9 +91,10 @@ class TicketViewController extends Controller
             'tickets.id_agente_asignado'   => 'Ticket > Agente asignado',
             'tickets.id_ciudadano'         => 'Ticket > Solicitante',
             'tickets.descripcion'          => 'Ticket > Descripción',
-            'tickets.canal_ingreso'        => 'Ticket > Canal de ingreso',
+            'tickets.id_canal'        => 'Ticket > Canal de ingreso',
             'tickets.estado'               => 'Ticket > Estado',
             'tickets.prioridad'            => 'Ticket > Prioridad',
+            'tickets.id_direccion_municipal'  => 'Ticket > Dirección Municipal'
         ];
 
         $availableOperators = [
@@ -111,7 +131,8 @@ class TicketViewController extends Controller
             'estados',
             'tipos_tickets',
             'canales',
-            'descripciones'
+            'descripciones',
+            'direcciones'
         ));
     }
 
@@ -138,12 +159,21 @@ class TicketViewController extends Controller
     {
         $ticketView->load(['conditions', 'columns', 'sorts', 'creator']);
 
-        return view('pages.ticket-views.show', compact('ticketView'));
+        return view('pages.ticket-views.edit', compact('ticketView'));
     }
 
     public function edit(TicketView $ticketView)
     {
         $ticketView->load(['conditions', 'columns', 'sorts']);
+
+        $direcciones = DireccionMunicipal::select('id', 'nombre_direccion', 'estatus')
+            ->where('estatus', true)
+            ->orderBy('nombre_direccion')
+            ->get()
+            ->map(fn($d) => [
+                'id'     => $d->id,
+                'nombre_direccion' => $d->nombre_direccion,
+            ]);
 
         $ciudadanos = Ciudadano::select('id', 'nombre', 'apellido_paterno')
             ->orderBy('nombre')
@@ -179,9 +209,10 @@ class TicketViewController extends Controller
             'tickets.id_agente_asignado' => 'Ticket > Agente asignado',
             'tickets.id_ciudadano'       => 'Ticket > Solicitante',
             'tickets.descripcion'        => 'Ticket > Descripción',
-            'tickets.canal_ingreso'      => 'Ticket > Canal de ingreso',
+            'tickets.id_canal'      => 'Ticket > Canal de ingreso',
             'tickets.estado'             => 'Ticket > Estado',
             'tickets.prioridad'          => 'Ticket > Prioridad',
+            'tickets.id_direccion_municipal'  => 'Ticket > Dirección Municipal'
         ];
 
         $availableOperators = [
@@ -238,7 +269,8 @@ class TicketViewController extends Controller
             'prioridades',
             'estados',
             'tipos_tickets',
-            'canales'
+            'canales',
+            'direcciones'
         ));
     }
 
@@ -299,28 +331,48 @@ class TicketViewController extends Controller
             ->with('success', $ticketView->active ? 'Vista activada.' : 'Vista desactivada.');
     }
 
-    public function indexForAgent()
-    {
-        $views = TicketView::active()
-            ->visibleFor(auth()->user())
-            ->ordered()
-            ->with(['conditions', 'columns', 'sorts'])
-            ->get();
-
-        return view('pages.ticket-views.index', compact('views'));
-    }
 
 
     private function syncConditions(TicketView $view, array $conditions): void
     {
         $view->conditions()->delete();
 
+        $operatorsThatNeedValue = [
+            'is',
+            'is_not',
+            'contains',
+            'not_contains',
+            'less_than',
+            'greater_than',
+            'is_before',
+            'is_after',
+        ];
+
         foreach ($conditions as $condition) {
+            $field = $condition['field'] ?? null;
+            $operator = $condition['operator'] ?? null;
+            $value = $condition['value'] ?? null;
+            $matchType = $condition['match_type'] ?? null;
+
+            $hasAnyData = filled($field) || filled($operator) || filled($value);
+
+            if (! $hasAnyData) {
+                continue;
+            }
+
+            if (blank($matchType) || blank($field) || blank($operator)) {
+                continue;
+            }
+
+            if (in_array($operator, $operatorsThatNeedValue, true) && blank($value)) {
+                continue;
+            }
+
             $view->conditions()->create([
-                'match_type' => $condition['match_type'],
-                'field'      => $condition['field'],
-                'operator'   => $condition['operator'],
-                'value'      => $condition['value'] ?? null,
+                'match_type' => $matchType,
+                'field'      => $field,
+                'operator'   => $operator,
+                'value'      => filled($value) ? $value : null,
             ]);
         }
     }
@@ -350,5 +402,84 @@ class TicketViewController extends Controller
                 'direction'  => $sort['direction'] ?? 'asc',
             ]);
         }
+    }
+
+    //Carga las vistas disponibles para el agente pero sin abrirlas
+    public function indexForAgent()
+    {
+        $views = TicketView::active()
+            ->visibleFor(auth()->user())
+            ->ordered()
+            ->with(['conditions', 'columns'])
+            ->get();
+
+        return view('pages.ticket-views.index-agent', compact('views'));
+    }
+
+    public function showView(TicketView $ticketView)
+    {
+        //Verifica el acceso, solo mostrará las vistas que están puestas para todos los agentes
+        if ($ticketView->visibility === 'only_me' && $ticketView->created_by !== auth()->id()) {
+            abort(403);
+        }
+
+        //Cargar las vistas     
+        $views = TicketView::active()
+            ->visibleFor(auth()->user())
+            ->ordered()
+            ->with(['conditions', 'columns'])
+            ->get();
+
+        $ticketView->load(['conditions', 'columns']);
+
+        $query = Ticket::query()->with(['ciudadano', 'agente']);
+
+        foreach ($ticketView->conditions->where('match_type', 'all') as $condition) {
+            $this->applyCondition($query, $condition);
+        }
+
+        $anyConditions = $ticketView->conditions->where('match_type', 'any');
+        if ($anyConditions->isNotEmpty()) {
+            $query->where(function ($q) use ($anyConditions) {
+                foreach ($anyConditions as $condition) {
+                    $q->orWhere(function ($q2) use ($condition) {
+                        $this->applyCondition($q2, $condition);
+                    });
+                }
+            });
+        }
+
+        $tickets = $query->get();
+        $columns = $ticketView->columns->sortBy('position');
+
+        return view('pages.ticket-views.index-agent', compact(
+            'views',
+            'ticketView',
+            'tickets',
+            'columns'
+        ));
+    }
+
+    private function applyCondition($query, $condition): void
+    {
+        $column   = str_replace('tickets.', '', $condition->field);
+        $operator = $condition->operator;
+        $value    = $condition->value;
+
+        match ($operator) {
+            'is'           => $query->where($column, '=', $value),
+            'is_not'       => $query->where($column, '!=', $value),
+            'contains'     => $query->where($column, 'ilike', '%' . $value . '%'),
+            'not_contains' => $query->where($column, 'not ilike', '%' . $value . '%'),
+            'present'      => $query->whereNotNull($column)->where($column, '!=', ''),
+            'not_present'  => $query->where(function ($q) use ($column) {
+                $q->whereNull($column)->orWhere($column, '=', '');
+            }),
+            'less_than'    => $query->where($column, '<', $value),
+            'greater_than' => $query->where($column, '>', $value),
+            'is_before'    => $query->whereDate($column, '<', $value),
+            'is_after'     => $query->whereDate($column, '>', $value),
+            default        => null,
+        };
     }
 }

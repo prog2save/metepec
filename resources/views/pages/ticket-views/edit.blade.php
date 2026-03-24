@@ -148,6 +148,16 @@
                                         </select>
                                     </template>
 
+                                    <template x-if="cond.field === 'tickets.id_direccion_municipal'">
+                                        <select :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+                                            <option value="">Seleccionar dirección municipal</option>
+                                            @foreach($direcciones as $d)
+                                            <option value="{{ $d['id'] }}">{{ $d['nombre_direccion'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </template>
+
                                     <template x-if="cond.field === 'tickets.estado'">
                                         <select :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -182,7 +192,7 @@
                                         </select>
                                     </template>
 
-                                    <template x-if="cond.field === 'tickets.canal_ingreso'">
+                                    <template x-if="cond.field === 'tickets.id_canal'">
                                         <select :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                             <option value="">Seleccionar canal</option>
@@ -200,7 +210,7 @@
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                     </template>
 
-                                    <template x-if="!['tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.canal_ingreso'].includes(cond.field)">
+                                    <template x-if="!['tickets.id_direccion_municipal','tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.id_canal'].includes(cond.field)">
                                         <input type="text" :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
                                             placeholder="Valor"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -270,6 +280,16 @@
                                         </select>
                                     </template>
 
+                                    <template x-if="cond.field === 'tickets.id_direccion_municipal'">
+                                        <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+                                            <option value="">Seleccionar dirección municipal</option>
+                                            @foreach($direcciones as $d)
+                                            <option value="{{ $d['id'] }}">{{ $d['nombre_direccion'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </template>
+
                                     <template x-if="cond.field === 'tickets.id_ciudadano'">
                                         <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -314,7 +334,7 @@
                                         </select>
                                     </template>
 
-                                    <template x-if="cond.field === 'tickets.canal_ingreso'">
+                                    <template x-if="cond.field === 'tickets.id_canal'">
                                         <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                             <option value="">Seleccionar canal</option>
@@ -332,7 +352,7 @@
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                     </template>
 
-                                    <template x-if="!['tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.canal_ingreso'].includes(cond.field)">
+                                    <template x-if="!['tickets.id_direccion_municipal','tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.id_canal'].includes(cond.field)">
                                         <input type="text" :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
                                             placeholder="Valor"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -432,10 +452,11 @@
                 'tickets.estado': ['is', 'is_not'],
                 'tickets.prioridad': ['is', 'is_not'],
                 'tickets.tipo_ticket': ['is', 'is_not'],
-                'tickets.canal_ingreso': ['is', 'is_not'],
+                'tickets.id_canal': ['is', 'is_not'],
                 'tickets.id_agente_asignado': ['is', 'is_not', 'present', 'not_present'],
                 'tickets.id_ciudadano': ['is', 'is_not', 'present', 'not_present'],
                 'tickets.descripcion': ['contains', 'not_contains', 'present', 'not_present'],
+                'tickets.id_direccion_municipal': ['is', 'is_not'],
             },
 
             operatorLabels: {

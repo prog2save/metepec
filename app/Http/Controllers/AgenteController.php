@@ -14,6 +14,7 @@ use App\Models\Servicio;
 use App\Models\Usuario;
 use App\Models\TicketRespuesta;
 use App\Models\EstadoTicket;
+use App\Models\TicketView;
 
 class AgenteController extends Controller
 {
@@ -42,16 +43,17 @@ class AgenteController extends Controller
         ));
     }
 
+    //Listamos los tickets que le corresponden al agente
     public function tickets(Request $request)
     {
         $query = Ticket::where('id_agente_asignado', Auth::id());
 
         if ($request->filled('estado')) {
-            $query->where('estado', $request->estado);
+            $query->where('estado', $request->estado); //Llamada del filtro de estado
         }
 
         if ($request->filled('canal')) {
-            $query->where('id_canal', $request->canal);
+            $query->where('id_canal', $request->canal); //Llamada del filtro de canal de ingreso
         }
 
         $tickets = $query->latest()->paginate(15)->withQueryString();
@@ -61,6 +63,7 @@ class AgenteController extends Controller
         return view('pages.agente.tickets.index', compact('tickets', 'canales', 'estados'));
     }
 
+    //Resolver sin entrar a editar el ticket
     public function resolver(Ticket $ticket)
     {
         if ($ticket->id_agente_asignado !== Auth::id()) {
@@ -96,12 +99,14 @@ class AgenteController extends Controller
     {
         $input = $request->validated();
 
-        if (!empty($input['canal_ingreso'])) {
+        if (!empty($input['canal_ingreso'])) { //validar si ya existe dicho canal de ingreso
+            //Si no existe crea un nuevo registro, si ya existe le corresponde el id
             $canal = CanalIngreso::firstOrCreate(['nombre' => $input['canal_ingreso']]);
             $input['id_canal'] = $canal->id;
         }
         unset($input['canal_ingreso']);
 
+        //Si no coloca un agente el estado se marca como nuevo
         if (!empty($input['id_agente_asignado']) && ($input['estado'] ?? 'Nuevo') === 'Nuevo') {
             $input['estado'] = 'Abierto';
         }
@@ -115,12 +120,12 @@ class AgenteController extends Controller
         return redirect()->route('agente.tickets.index')->with('success', 'Ticket creado exitosamente.');
     }
 
-    public function ciudadanoCreate()
+    public function ciudadanoCreate() //Crear ciudadano desde el select del create
     {
         return view('pages.agente.ciudadanos.create');
     }
 
-    // Guardar nuevo ciudadano
+    // Guardar al nuevo ciudadano
     public function ciudadanoStore(CiudadanoStore $request)
     {
         $input = $request->validated();
@@ -134,6 +139,7 @@ class AgenteController extends Controller
             ->with('success', 'Ciudadano creado exitosamente.');
     }
 
+    //abrir el ticket para mostrar su contenido
     public function show(string $id)
     {
         $ticket = Ticket::with([
@@ -146,8 +152,16 @@ class AgenteController extends Controller
         $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
         $direcciones = DireccionMunicipal::select('id', 'nombre_direccion')->where('estatus', true)->orderBy('nombre_direccion')->get();
         $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')->where('activo', true)->orderBy('nombre_servicio')->get();
+        $tickets_creados = Ticket::with(['servicio'])
+            ->where('activo', 1)
+            ->where('id_ciudadano', $ticket->id_ciudadano)
+            ->where('id', '!=', $ticket->id) // excluir el ticket actual
+            ->orderByDesc('created_at')
+            ->take(5) 
+            ->get();
 
-        return view('pages.agente.tickets.show', compact('ticket', 'agentes', 'estados', 'direcciones', 'servicios'));
+
+        return view('pages.agente.tickets.show', compact('ticket', 'agentes', 'estados', 'direcciones', 'servicios', 'tickets_creados'));
     }
 
     public function update(Request $request, string $id)
@@ -167,6 +181,8 @@ class AgenteController extends Controller
             ->with('success', 'Ticket actualizado exitosamente.');
     }
 
+    //Logica para las respuestas que contiene cada ticket y poderse comunicar con el solicitante 
+    // usuario final
     public function responder(Request $request, string $id)
     {
         $request->validate([
@@ -182,5 +198,89 @@ class AgenteController extends Controller
         ]);
 
         return back()->with('success', 'Respuesta enviada.');
+    }
+
+    public function indexForAgent()
+    {
+        $views = TicketView::active()
+            ->visibleFor(auth()->user())
+            ->ordered()
+            ->with(['conditions', 'columns'])
+            ->get();
+
+        return view('pages.agente.ticket-views.index-agent', compact('views'));
+    }
+
+    public function showView(TicketView $ticketView)
+    {
+        //Verifica el acceso, solo mostrará las vistas que están puestas para todos los agentes
+        if ($ticketView->visibility === 'only_me' && $ticketView->created_by !== auth()->id()) {
+            abort(403);
+        }
+
+        // Todas las vistas para el sidebar izquierdo
+        $views = TicketView::active()
+            ->visibleFor(auth()->user())
+            ->ordered()
+            ->with(['conditions', 'columns'])
+            ->get();
+
+        //Carga de condiciones y columnas de la vista
+        $ticketView->load(['conditions', 'columns']);
+
+        //Query de los tickets
+        $query = Ticket::query()->with(['ciudadano', 'agente']);
+
+        //Aplicar las condiciones de ALL, aplicar todas las condiciones
+        foreach ($ticketView->conditions->where('match_type', 'all') as $condition) {
+            $this->applyCondition($query, $condition);
+        }
+
+        //Condiciones de al menos cumplirse una
+        $anyConditions = $ticketView->conditions->where('match_type', 'any');
+        if ($anyConditions->isNotEmpty()) {
+            $query->where(function ($q) use ($anyConditions) {
+                foreach ($anyConditions as $condition) {
+                    $q->orWhere(function ($q2) use ($condition) {
+                        $this->applyCondition($q2, $condition);
+                    });
+                }
+            });
+        }
+
+        //Obtener los tickets resultado de la query
+        $tickets = $query->get();
+        //Ordenar las columnas segun como están ordenadas por el administrador
+        $columns = $ticketView->columns->sortBy('position');
+
+        return view('pages.agente.ticket-views.index-agent', compact(
+            'views',
+            'ticketView',
+            'tickets',
+            'columns'
+        ));
+    }
+
+    private function applyCondition($query, $condition): void
+    {
+        $column   = str_replace('tickets.', '', $condition->field);
+        $operator = $condition->operator;
+        $value    = $condition->value;
+
+        match ($operator) {
+            'is'           => $query->where($column, '=', $value),
+            'is_not'       => $query->where($column, '!=', $value),
+            'contains'     => $query->where($column, 'ilike', '%' . $value . '%'),
+            'not_contains' => $query->where($column, 'not ilike', '%' . $value . '%'),
+            'present'      => $query->whereNotNull($column)->where($column, '!=', ''),
+            'not_present'  => $query->where(function ($q) use ($column) {
+                $q->whereNull($column)->orWhere($column, '=', '');
+            }),
+            'less_than'    => $query->where($column, '<', $value),
+            'greater_than' => $query->where($column, '>', $value),
+            'is_before'    => $query->whereDate($column, '<', $value),
+            'is_after'     => $query->whereDate($column, '>', $value),
+            default        => null,
+        };
     }
 }

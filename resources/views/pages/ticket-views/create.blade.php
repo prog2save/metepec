@@ -75,7 +75,7 @@
 
         {{-- Condiciones --}}
         <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
-            x-data="condicionesForm()">
+            x-data="condicionesForm(@js(old('conditions', [])))">
 
             <h2 class="text-base font-medium text-gray-800 dark:text-white/90 mb-1">Condiciones <span class="text-red-500">*</span></h2>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -86,7 +86,7 @@
             <div class="mb-6">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Cumplir <strong>TODAS</strong> las siguientes condiciones</p>
 
-                <template x-for="(cond, index) in allConditions" :key="index">
+                <template x-for="(cond, index) in allConditions" :key="cond.uid">
                     <div class="flex items-center gap-3 mb-3">
                         <input type="hidden" :name="'conditions[' + allOffset + index + '][match_type]'" value="all">
 
@@ -99,14 +99,14 @@
                             @endforeach
                         </select>
 
-                        {{-- Operador dinámico}}
+                        {{-- Operador dinámico --}}
                         <select :name="'conditions[' + allOffset + index + '][operator]'"
                             x-model="cond.operator"
                             :disabled="!cond.field"
                             class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 disabled:opacity-50">
                             <option value="">Operador</option>
                             <template x-for="op in getOperators(cond.field)" :key="op">
-                                <option :value="op" :selected="cond.operator === op" x-text="operatorLabels[op]"></option>
+                                <option :value="op"  x-text="operatorLabels[op]"></option>
                             </template>
                         </select>
 
@@ -132,6 +132,17 @@
                                             <option value="">Seleccionar solicitante</option>
                                             @foreach($ciudadanos as $c)
                                             <option value="{{ $c['id'] }}">{{ $c['nombre'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </template>
+
+                                    {{-- Direcciones Municipales --}}
+                                    <template x-if="cond.field === 'tickets.id_direccion_municipal'">
+                                        <select :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+                                            <option value="">Seleccionar dirección municipal</option>
+                                            @foreach($direcciones as $d)
+                                            <option value="{{ $d['id'] }}">{{ $d['nombre_direccion'] }}</option>
                                             @endforeach
                                         </select>
                                     </template>
@@ -174,7 +185,7 @@
                                     </template>
 
                                     {{-- Canal de ingreso --}}
-                                    <template x-if="cond.field === 'tickets.canal_ingreso'">
+                                    <template x-if="cond.field === 'tickets.id_canal'">
                                         <select :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                             <option value="">Seleccionar canal</option>
@@ -194,7 +205,7 @@
                                     </template>
 
                                     {{-- Descripción u otros campos de texto --}}
-                                    <template x-if="!['tickets.descripcion', 'tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.canal_ingreso'].includes(cond.field)">
+                                    <template x-if="!['tickets.id_direccion_municipal','tickets.descripcion', 'tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.id_canal'].includes(cond.field)">
                                         <input type="text" :name="'conditions[' + allOffset + index + '][value]'" x-model="cond.value"
                                             placeholder="Valor"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -227,7 +238,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Cumplir <strong>CUALQUIERA</strong> de las siguientes condiciones</p>
 
-                <template x-for="(cond, index) in anyConditions" :key="index">
+                <template x-for="(cond, index) in anyConditions" :key="cond.uid">
                     <div class="flex items-center gap-3 mb-3">
                         <input type="hidden" :name="'conditions[' + anyOffset + index + '][match_type]'" value="any">
 
@@ -247,7 +258,7 @@
                             class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 disabled:opacity-50">
                             <option value="">Operador</option>
                             <template x-for="op in getOperators(cond.field)" :key="op">
-                                <option :value="op" :selected="cond.operator === op" x-text="operatorLabels[op]"></option>
+                                <option :value="op" x-text="operatorLabels[op]"></option>
                             </template>
                         </select>
 
@@ -292,6 +303,17 @@
                                         </select>
                                     </template>
 
+                                    {{-- Direcciones Municipales --}}
+                                    <template x-if="cond.field === 'tickets.id_direccion_municipal'">
+                                        <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+                                            <option value="">Seleccionar dirección municipal</option>
+                                            @foreach($direcciones as $d)
+                                            <option value="{{ $d['id'] }}">{{ $d['nombre_direccion'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </template>
+
                                     {{-- Prioridad --}}
                                     <template x-if="cond.field === 'tickets.prioridad'">
                                         <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
@@ -315,7 +337,7 @@
                                     </template>
 
                                     {{-- Canal de ingreso --}}
-                                    <template x-if="cond.field === 'tickets.canal_ingreso'">
+                                    <template x-if="cond.field === 'tickets.id_canal'">
                                         <select :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
                                             <option value="">Seleccionar canal</option>
@@ -335,7 +357,7 @@
                                     </template>
 
                                     {{-- Otros campos --}}
-                                    <template x-if="!['tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.canal_ingreso'].includes(cond.field)">
+                                    <template x-if="!['tickets.id_direccion_municipal','tickets.descripcion','tickets.id_agente_asignado','tickets.id_ciudadano','tickets.estado','tickets.prioridad','tickets.tipo_ticket','tickets.id_canal'].includes(cond.field)">
                                         <input type="text" :name="'conditions[' + anyOffset + index + '][value]'" x-model="cond.value"
                                             placeholder="Valor"
                                             class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
@@ -368,7 +390,7 @@
 
         {{-- Columnas y Ordenamiento --}}
         <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
-            x-data="columnasForm()">
+            x-data="columnasForm(@js(old('columns', [])))">
 
             <h2 class="text-base font-medium text-gray-800 dark:text-white/90 mb-1">Seleccionar datos</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
@@ -381,7 +403,7 @@
                     Columnas (<span x-text="columns.length"></span> de 15)
                 </p>
 
-                <template x-for="(col, index) in columns" :key="index">
+                <template x-for="(col, index) in columns" :key="col.uid">
                     <div class="flex items-center gap-3 mb-2">
                         <input type="hidden" :name="'columns[' + index + '][position]'" :value="index">
 
@@ -475,30 +497,60 @@
 </form>
 
 @endsection
-
 @push('scripts')
 <script>
-    function condicionesForm() {
+    function toList(data) {
+        if (Array.isArray(data)) return data;
+        if (data && typeof data === 'object') return Object.values(data);
+        return [];
+    }
+
+    function uid() {
+        return (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2));
+    }
+
+    function condicionesForm(oldConditions = []) {
+        const condiciones = toList(oldConditions);
+
+        const allFromOld = condiciones
+            .filter(c => (c.match_type ?? '') === 'all')
+            .map(c => ({
+                uid: uid(),
+                field: c.field ?? '',
+                operator: c.operator ?? '',
+                value: c.value ?? ''
+            }));
+
+        const anyFromOld = condiciones
+            .filter(c => (c.match_type ?? '') === 'any')
+            .map(c => ({
+                uid: uid(),
+                field: c.field ?? '',
+                operator: c.operator ?? '',
+                value: c.value ?? ''
+            }));
+
         return {
-            allConditions: [{
+            allConditions: allFromOld.length ? allFromOld : [{
+                uid: uid(),
                 field: '',
                 operator: '',
                 value: ''
             }],
-            anyConditions: [],
 
-            // Operadores disponibles por campo
+            anyConditions: anyFromOld,
+
             operatorsByField: {
                 'tickets.estado': ['is', 'is_not'],
                 'tickets.prioridad': ['is', 'is_not'],
                 'tickets.tipo_ticket': ['is', 'is_not'],
-                'tickets.canal_ingreso': ['is', 'is_not'],
+                'tickets.id_canal': ['is', 'is_not'],
                 'tickets.id_agente_asignado': ['is', 'is_not', 'present', 'not_present'],
                 'tickets.id_ciudadano': ['is', 'is_not', 'present', 'not_present'],
                 'tickets.descripcion': ['contains', 'not_contains', 'present', 'not_present'],
+                'tickets.id_direccion_municipal': ['is', 'is_not']
             },
 
-            // Etiquetas de operadores
             operatorLabels: {
                 'is': 'Es',
                 'is_not': 'No es',
@@ -508,12 +560,10 @@
                 'not_present': 'No está presente',
             },
 
-            // Devuelve los operadores disponibles para el campo seleccionado
             getOperators(field) {
                 return this.operatorsByField[field] ?? Object.keys(this.operatorLabels);
             },
 
-            // Cuando cambia el campo, resetea operador y valor
             onFieldChange(cond) {
                 cond.operator = '';
                 cond.value = '';
@@ -526,60 +576,75 @@
             get allOffset() {
                 return 0;
             },
+
             get anyOffset() {
                 return this.allConditions.length;
             },
+
             addAll() {
                 this.allConditions.push({
+                    uid: uid(),
                     field: '',
                     operator: '',
                     value: ''
                 });
             },
+
             removeAll(i) {
                 this.allConditions.splice(i, 1);
+
+                if (this.allConditions.length === 0) {
+                    this.allConditions.push({
+                        uid: uid(),
+                        field: '',
+                        operator: '',
+                        value: ''
+                    });
+                }
             },
+
             addAny() {
                 this.anyConditions.push({
+                    uid: uid(),
                     field: '',
                     operator: '',
                     value: ''
                 });
             },
+
             removeAny(i) {
                 this.anyConditions.splice(i, 1);
             },
         }
     }
 
-    function columnasForm() {
+    function columnasForm(oldColumns = []) {
+        const columnas = toList(oldColumns);
+
         return {
-            columns: [{
-                    column_key: 'id'
-                },
-                {
-                    column_key: 'estado'
-                },
-                {
-                    column_key: 'asunto'
-                },
-                {
-                    column_key: 'id_agente_asignado'
-                },
-                {
-                    column_key: 'created_at'
-                },
-                {
-                    column_key: 'tipo_ticket'
-                },
-            ],
+            columns: columnas.length
+                ? columnas.map(c => ({
+                    uid: uid(),
+                    column_key: c.column_key ?? ''
+                }))
+                : [
+                    { uid: uid(), column_key: 'id' },
+                    { uid: uid(), column_key: 'estado' },
+                    { uid: uid(), column_key: 'asunto' },
+                    { uid: uid(), column_key: 'id_agente_asignado' },
+                    { uid: uid(), column_key: 'created_at' },
+                    { uid: uid(), column_key: 'tipo_ticket' },
+                ],
+
             addColumn() {
                 if (this.columns.length < 15) {
                     this.columns.push({
+                        uid: uid(),
                         column_key: ''
                     });
                 }
             },
+
             removeColumn(i) {
                 this.columns.splice(i, 1);
             },

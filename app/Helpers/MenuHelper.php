@@ -30,9 +30,9 @@ class MenuHelper
             [
                 'icon' => 'vistas-icon',
                 'name' => 'Vistas',
-                'path' => '/agente/vistas',
+                'path' => '/agente/ticket-views',
                 'subItems' => [
-                    ['name' => 'Mis tickets', 'path' => '/agente/tickets'],
+                    ['name' => 'Mis Vistas', 'path' => '/agente/ticket-views/'],
                 ],
             ]
         ];

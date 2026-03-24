@@ -68,7 +68,7 @@ class TicketView extends Model
         return $query->where('active', true);
     }
 
-    public function scopeVisibleFor($query, User $user)
+    public function scopeVisibleFor($query, Usuario $user)
     {
         return $query->where(function ($q) use ($user) {
             $q->where('visibility', 'all_agents')

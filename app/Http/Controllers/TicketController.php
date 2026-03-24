@@ -146,8 +146,16 @@ class TicketController extends Controller
         $estados = EstadoTicket::select('id', 'nombre_agente')
             ->orderBy('nombre_agente')
             ->get();
+        
+        $tickets_creados = Ticket::with(['servicio'])
+            ->where('activo', 1)
+            ->where('id_ciudadano', $ticket->id_ciudadano)
+            ->where('id', '!=', $ticket->id) // excluir el ticket actual
+            ->orderByDesc('created_at')
+            ->take(5) 
+            ->get();
 
-        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados'));
+        return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados', 'tickets_creados'));
     }
 
     /**

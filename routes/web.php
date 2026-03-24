@@ -35,7 +35,8 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('agente.dashboard');
         }
 
-        return view('pages.dashboard.ecommerce', ['title' => 'Dashboard']);
+        return app(DashboardController::class)->index();
+        
     })->middleware('auth')->name('dashboard');
 
     Route::get('/calendar', function () {
@@ -104,7 +105,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/',                  [TicketViewController::class, 'index'])->name('index');
             Route::post('/',                 [TicketViewController::class, 'store'])->name('store');
             Route::get('/create',            [TicketViewController::class, 'create'])->name('create');
-            Route::get('/{ticketView}',      [TicketViewController::class, 'show'])->name('show');
             Route::get('/{ticketView}/edit', [TicketViewController::class, 'edit'])->name('edit');
             Route::put('/{ticketView}',      [TicketViewController::class, 'update'])->name('update');
             Route::delete('/{ticketView}',   [TicketViewController::class, 'destroy'])->name('destroy');
@@ -146,7 +146,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('tickets/{id}', [AgenteController::class, 'update'])->name('tickets.update');
         Route::post('tickets/{id}/responder', [AgenteController::class, 'responder'])->name('tickets.responder');
         Route::post('/agente/ciudadanos', [AgenteController::class, 'ciudadanoStore'])->name('agente.ciudadanos.store');
-        Route::get('/ticket-views',  [TicketViewController::class, 'indexForAgent'])->name('ticket-views.index');
+        Route::get('/ticket-views', [AgenteController::class, 'indexForAgent'])->name('ticket-views.index');
+        Route::get('/ticket-views/{ticketView}', [AgenteController::class, 'showView'])->name('ticket-views.show');
     });
 });
 

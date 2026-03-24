@@ -200,8 +200,8 @@
                                 <option value="">–</option>
                                 @foreach($agentes as $a)
                                 <option value="{{ $a->id }}"
-                                    {{ (string)old('id_agente_asignado', $ticket->id_agente_asignado) === (string)$a->id ? 'selected' : '' }}>
-                                    {{ $a->nombre }} {{ $a->apellido }}
+                                    {{(string)old('id_agente_asignado', $ticket->id_agente_asignado) === (string)$a->id ? 'selected' : '' }}>
+                                    {{ $a->nombre}} {{ $a->apellido }}
                                 </option>
                                 @endforeach
                             </select>
@@ -460,6 +460,131 @@
 
                 </div>
             </div>
+
+            {{-- ════════════════════════════════
+             COLUMNA DERECHA — Ciudadano
+        ════════════════════════════════ --}}
+            <div class="w-56 shrink-0 space-y-3">
+
+                {{-- Info ciudadano --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Solicitante</h3>
+                    </div>
+                    <div class="p-4 space-y-3">
+
+                        {{-- Avatar + nombre --}}
+                        <div class="flex items-center gap-3">
+                            <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                {{ strtoupper(substr($ticket->ciudadano->nombre ?? '?', 0, 1)) }}
+                            </span>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                                    {{ $ticket->ciudadano->nombre ?? '–' }}
+                                    {{ $ticket->ciudadano->apellido_paterno ?? '' }}
+                                </p>
+                                @if($ticket->ciudadano?->apellido_materno)
+                                <p class="truncate text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $ticket->ciudadano->apellido_materno }}
+                                </p>
+                                @endif
+                            </div>
+                        </div>
+
+                        {{-- Correo --}}
+                        @if($ticket->ciudadano?->email)
+                        <div>
+                            <p class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600 mb-0.5">Correo</p>
+                            <a href="mailto:{{ $ticket->ciudadano->email }}"
+                                class="text-xs text-brand-600 hover:underline dark:text-brand-400 break-all">
+                                {{ $ticket->ciudadano->email }}
+                            </a>
+                        </div>
+                        @endif
+
+                        {{-- Teléfono --}}
+                        @if($ticket->ciudadano?->telefono_principal)
+                        <div>
+                            <p class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600 mb-0.5">Teléfono</p>
+                            <a href="tel:{{ $ticket->ciudadano->telefono_principal }}"
+                                class="text-xs text-gray-700 dark:text-gray-300">
+                                {{ $ticket->ciudadano->telefono_principal }}
+                            </a>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+
+
+                {{-- Tickets recientes del solicitante --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            Tickets recientes del solicitante
+                        </h3>
+                    </div>
+
+                    <div class="p-4 space-y-3">
+                        @forelse($tickets_creados as $ticket_creado)
+                        <div class="rounded-lg border border-gray-100 p-3 dark:border-gray-800">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-medium text-gray-800 dark:text-white/90 truncate">
+                                        {{ $ticket_creado->asunto }}
+                                    </p>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                        Creado: {{ $ticket_creado->created_at->format('d/m/Y H:i') }}
+                                    </p>
+                                </div>
+
+                                <span class="inline-flex rounded-full px-2 py-1 text-xs font-medium
+                                @if($ticket_creado->estado === 'Resuelto') bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                                @elseif($ticket_creado->estado === 'Pendiente') bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
+                                @elseif($ticket_creado->estado === 'Nuevo') bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400
+                                @elseif($ticket_creado->estado === 'Abierto') bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
+                                @else bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
+                                @endif">
+                                    {{ $ticket_creado->estado }}
+                                </span>
+                            </div>
+                            <!--
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <div>
+                                    <p class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600 mb-0.5">
+                                        Prioridad
+                                    </p>
+                                    <span class="text-xs font-medium
+                                        @if($ticket_creado->prioridad === 'Urgente') text-red-600 dark:text-red-400
+                                        @elseif($ticket_creado->prioridad === 'Alta') text-orange-600 dark:text-orange-400
+                                        @elseif($ticket_creado->prioridad === 'Media') text-yellow-600 dark:text-yellow-400
+                                        @else text-gray-600 dark:text-gray-400
+                                        @endif">
+                                        {{ $ticket_creado->prioridad ?? 'Sin prioridad' }}
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600 mb-0.5">
+                                        Tipo
+                                    </p>
+                                    <p class="text-xs text-gray-700 dark:text-gray-300">
+                                        {{ $ticket_creado->tipo_ticket ?? 'Sin tipo' }}
+                                    </p>
+                                </div>
+                            </div>
+-->
+                        </div>
+                        @empty
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Este solicitante no tiene otros tickets recientes.
+                        </p>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
+
 
         </div>
     </form>
