@@ -47,7 +47,7 @@
                 </a>
             </div>
 
-            <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="rounded-xl p-2 border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="max-w-full overflow-x-auto">
                     <table id="tabla-vista-tickets" class="w-full min-w-[700px]">
                         <thead>
@@ -144,13 +144,6 @@
                                 </td>
                                 @endforeach
 
-                                <td class="px-4 py-3.5 text-center">
-                                    <a href="{{ route('agente.tickets.show', $t->id) }}"
-                                        class="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 transition">
-                                        Ver
-                                    </a>
-                                </td>
-
                             </tr>
                             @empty
                             <tr>
@@ -187,19 +180,26 @@
 @push('scripts')
 @if(isset($ticketView))
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#tabla-vista-tickets')) {
         new DataTable('#tabla-vista-tickets', {
-            searchable: true,
-            paging: true,
-            perPage: 20,
-            labels: {
-                placeholder: "Buscar tickets...",
-                perPage: "Tickets por página",
-                noRows: "No hay tickets que coincidan",
-                info: "Mostrando {start} a {end} de {rows} tickets"
+            responsive: true,
+            pageLength: 10,
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ tickets por página",
+                zeroRecords: "No se encontraron tickets",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
+                infoEmpty: "Mostrando 0 a 0 de 0 tickets",
+                emptyTable: "No hay tickets disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>
 @endif
 @endpush

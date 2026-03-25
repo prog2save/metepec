@@ -118,7 +118,7 @@
     </div>
 
     {{-- Tabla --}}
-    <div class="max-w-full">
+    <div class="max-w-full p-3">
         <table id="tabla-vistas" class="w-full min-w-[900px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
@@ -275,21 +275,28 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        new DataTable('#tabla-vistas', {
-            searchable: true,
-            paging: true,
-            perPage: 30,
-            columns: [{
-                select: [6],
-                sortable: false
-            }],
-            labels: {
-                placeholder: "Buscar vistas...",
-                perPage: "Vistas por página",
-                noRows: "No se encontraron vistas",
-                info: "Mostrando {start} a {end} de {rows} vistas"
-            }
-        });
+        if (document.querySelector('#tabla-vistas')) {
+            new DataTable('#tabla-vistas', {
+                responsive: true,
+                pageLength: 10,
+                columnDefs: [{
+                    orderable: false,
+                    targets: [6]
+                }],
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ vistas por página",
+                    zeroRecords: "No se encontraron vistas",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ vistas",
+                    infoEmpty: "Mostrando 0 a 0 de 0 vistas",
+                    emptyTable: "No hay vistas disponibles",
+                    paginate: {
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    }
+                }
+            });
+        }
 
         document.querySelectorAll('.dataTable-wrapper, .dataTable-container, .dataTable-table').forEach(el => {
             el.style.overflow = 'visible';

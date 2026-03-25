@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap') layer(base);
 @import 'prismjs/themes/prism.min.css';
 @import 'tailwindcss';
-@import "simple-datatables/dist/style.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -992,3 +991,63 @@ pre[class*='language-'] {
         height: 100vh !important;
         z-index: 999999 !important;;
     }
+
+/* ===== DataTables Dark Mode ===== */
+
+.dark .dt-container,
+.dark .dt-container .dt-length,
+.dark .dt-container .dt-info,
+.dark .dt-container .dt-search,
+.dark .dt-container .dt-paging {
+    color: rgb(156 163 175) !important; /* text-gray-400 */
+}
+
+.dark .dt-container .dt-input,
+.dark .dt-container .dt-length select {
+    background-color: rgb(17 24 39) !important; /* gray-900 */
+    border: 1px solid rgb(55 65 81) !important; /* gray-700 */
+    color: rgb(229 231 235) !important; /* gray-200 */
+    border-radius: 0.5rem;
+}
+
+.dark .dt-container .dt-input::placeholder {
+    color: rgb(156 163 175) !important; /* gray-400 */
+}
+
+.dark .dt-container .dt-paging .dt-paging-button {
+    color: rgb(209 213 219) !important; /* gray-300 */
+    background: transparent !important;
+    border: 1px solid rgb(55 65 81) !important; /* gray-700 */
+    border-radius: 0.5rem;
+}
+
+.dark .dt-container .dt-paging .dt-paging-button:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+}
+
+.dark .dt-container .dt-paging .dt-paging-button.current {
+    background-color: rgb(59 130 246) !important; /* blue-500 aprox */
+    border-color: rgb(59 130 246) !important;
+    color: white !important;
+}
+
+.dark .dt-container .dt-paging .dt-paging-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== DataTables Base ===== */
+
+.dt-container .dt-length,
+.dt-container .dt-info,
+.dt-container .dt-search,
+.dt-container .dt-paging {
+    font-size: 0.875rem;
+}
+
+.dt-container .dt-input,
+.dt-container .dt-length select {
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.75rem;
+}

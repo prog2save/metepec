@@ -1,6 +1,6 @@
 @props(['ciudadanos'])
 <div>
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="overflow-hidden p-2 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table id="ciudadanos-table" class="w-full min-w-[1102px]">
                 <thead>
@@ -102,3 +102,29 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#ciudadanos-table')) {
+        new DataTable('#ciudadanos-table', {
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [4,5] }
+            ],
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ ciudadanos por página",
+                zeroRecords: "No se encontraron ciudadanos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ ciudadanos",
+                infoEmpty: "Mostrando 0 a 0 de 0 ciudadanos",
+                emptyTable: "No hay ciudadanos disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
+            }
+        });
+    }
+});
+</script>

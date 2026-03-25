@@ -1,7 +1,7 @@
 @props(['direcciones'])
 
 <div>
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="overflow-hidden p-2 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table id="direcciones-table" class="w-full min-w-[1102px]">
                 <thead>
@@ -119,21 +119,27 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#direcciones-table')) {
         new DataTable('#direcciones-table', {
-            searchable: true,
-            perPage: 10,
-            columns: [{
-                    select: [0, 5, 6],
-                    sortable: false
-                } // Acciones y Completar sin ordenamiento
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [0,5,6] }
             ],
-            labels: {
-                placeholder: "Buscar dirección...",
-                perPage: "Direcciones por página",
-                noRows: "No se encontraron direcciones",
-                info: "Mostrando {start} a {end} de {rows} direcciones"
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ direcciones por página",
+                zeroRecords: "No se encontraron direcciones",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ direcciones",
+                infoEmpty: "Mostrando 0 a 0 de 0 direcciones",
+                emptyTable: "No hay direcciones disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>

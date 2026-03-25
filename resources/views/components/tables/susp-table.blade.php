@@ -1,6 +1,6 @@
 @props(['users'])
 <div>
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="overflow-hidden p-2 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table id="suspendidos-table" class="w-full min-w-[1102px]">
                 <thead>
@@ -87,20 +87,27 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#suspendidos-table')) {
         new DataTable('#suspendidos-table', {
-            searchable: true,
-            perPage: 10,
-            columns: [{
-                select: [6],
-                sortable: false
-            }],
-            labels: {
-                placeholder: "Buscar usuario...",
-                perPage: "Usuarios por página",
-                noRows: "No hay usuarios suspendidos",
-                info: "Mostrando {start} a {end} de {rows} usuarios"
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [6] }
+            ],
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ usuarios por página",
+                zeroRecords: "No se encontraron usuarios",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ usuarios",
+                infoEmpty: "Mostrando 0 a 0 de 0 usuarios",
+                emptyTable: "No hay usuarios disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>

@@ -48,7 +48,7 @@
         </a>
     </div>
 
-    <div class="max-w-full overflow-x-auto">
+    <div class="max-w-full overflow-x-auto p-3">
         <table id="tabla-tickets" class="w-full min-w-[900px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
@@ -155,21 +155,27 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#tabla-tickets')) {
         new DataTable('#tabla-tickets', {
-            searchable: true,
-            perPage: 10,
-            columns: [{
-                    select: [6],
-                    sortable: false
-                } // Acciones y Completar sin ordenamiento
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [6] }
             ],
-            labels: {
-                placeholder: "Buscar tickets...",
-                perPage: "Tickets por página",
-                noRows: "No se encontraron tickets",
-                info: "Mostrando {start} a {end} de {rows} tickets"
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ tickets por página",
+                zeroRecords: "No se encontraron tickets",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
+                infoEmpty: "Mostrando 0 a 0 de 0 tickets",
+                emptyTable: "No hay tickets disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>

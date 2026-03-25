@@ -12,7 +12,10 @@ import { Calendar } from "@fullcalendar/core";
 import TomSelect from "tom-select";
 import "tom-select/dist/css/tom-select.css";
 
-import { DataTable } from "simple-datatables";
+import DataTable from 'datatables.net-dt';
+import 'datatables.net-responsive-dt';
+import 'datatables.net-dt/css/dataTables.dataTables.css';
+import 'datatables.net-responsive-dt/css/responsive.dataTables.css';
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;

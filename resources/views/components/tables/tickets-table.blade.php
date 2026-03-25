@@ -1,21 +1,21 @@
 @props(['tickets'])
 
 <div>
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-        <div class="max-w-full overflow-x-auto custom-scrollbar">
-            <table id="tabla-tickets" class="w-full min-w-[1102px] p-2">
+    <div class="overflow-hidden p-4 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="max-w-full">
+            <table id="tabla-tickets" class="w-full display responsive nowrap">
                 <thead>
                     <tr class="border-b border-gray-100 dark:border-gray-800">
-                        <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400 min-w-[55px]">ID</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400 min-w-[55px] all">ID</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400 min-w-[110px]">Estado</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400">Asunto</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400">Solicitante</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400 min-w-[100px]">Prioridad</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400">Agente asignado</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-center text-theme-sm dark:text-gray-400">Fecha de resolución</th>
-                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400">Editar</th>
-                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400">Eliminar</th>
-                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400">Acciones</th>
+                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400 all">Editar</th>
+                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400 all">Eliminar</th>
+                        <th class="px-4 py-3 font-normal text-center text-gray-500 text-theme-sm dark:text-gray-400 all">Acciones</th>
                     </tr>
                 </thead>
 
@@ -127,21 +127,27 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('#tabla-tickets')) {
         new DataTable('#tabla-tickets', {
-            searchable: true,
-            perPage: 10,
-            columns: [{
-                    select: [7, 8 , 9],
-                    sortable: false
-                } // Acciones y Completar sin ordenamiento
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [7, 8, 9] }
             ],
-            labels: {
-                placeholder: "Buscar tickets...",
-                perPage: "Tickets por página",
-                noRows: "No se encontraron tickets",
-                info: "Mostrando {start} a {end} de {rows} tickets"
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ tickets por página",
+                zeroRecords: "No se encontraron tickets",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
+                infoEmpty: "Mostrando 0 a 0 de 0 tickets",
+                emptyTable: "No hay tickets disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>
