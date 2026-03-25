@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ticket extends Model
 {
@@ -42,7 +43,7 @@ class Ticket extends Model
 
     public function agente()
     {
-        return $this->belongsTo(Usuario::class, 'id_agente_asignado'); 
+        return $this->belongsTo(Usuario::class, 'id_agente_asignado');
     }
 
     public function servicio()
@@ -62,5 +63,9 @@ class Ticket extends Model
     public function respuestas()
     {
         return $this->hasMany(TicketRespuesta::class, 'id_ticket')->orderBy('created_at');
+    }
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

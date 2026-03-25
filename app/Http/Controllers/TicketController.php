@@ -11,6 +11,8 @@ use App\Models\Servicio;
 use App\Models\Usuario;
 use App\Models\CanalIngreso;
 use App\Models\EstadoTicket;
+use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
@@ -51,7 +53,7 @@ class TicketController extends Controller
         $canales = CanalIngreso::select('id', 'nombre')
             ->orderBy('nombre')
             ->get();
-        
+
         $estados = EstadoTicket::select('id', 'nombre_agente')
             ->orderBy('nombre_agente')
             ->get();
@@ -99,7 +101,8 @@ class TicketController extends Controller
             $input['estado'] = 'Abierto';
         }
 
-        Ticket::create($input);
+        $ticket = Ticket::create($input);
+        $this->syncTags($ticket, $request->tags ?? null);
 
         return redirect()
             ->route('tickets.index')
@@ -142,17 +145,17 @@ class TicketController extends Controller
         $canales = CanalIngreso::select('id', 'nombre')
             ->orderBy('nombre')
             ->get();
-        
+
         $estados = EstadoTicket::select('id', 'nombre_agente')
             ->orderBy('nombre_agente')
             ->get();
-        
+
         $tickets_creados = Ticket::with(['servicio'])
             ->where('activo', 1)
             ->where('id_ciudadano', $ticket->id_ciudadano)
             ->where('id', '!=', $ticket->id) // excluir el ticket actual
             ->orderByDesc('created_at')
-            ->take(5) 
+            ->take(5)
             ->get();
 
         return view('pages.tickets.edit', compact('ticket', 'ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados', 'tickets_creados'));
@@ -195,6 +198,7 @@ class TicketController extends Controller
         }
 
         $ticket->update($input);
+        $this->syncTags($ticket, $request->tags ?? null);
 
         return redirect()
             ->route('tickets.index')
@@ -218,5 +222,25 @@ class TicketController extends Controller
         }
         $ticket->update(['estado' => 'Resuelto', 'fecha_resolucion' => now()]);
         return redirect()->back()->with('success', 'Ticket marcado como resuelto exitosamente.');
+    }
+
+    private function syncTags(Ticket $ticket, ?string $tagsInput): void
+    {
+        if (empty($tagsInput)) {
+            $ticket->tags()->detach();
+            return;
+        }
+
+        $names = array_filter(array_map('trim', explode(',', $tagsInput)));
+
+        $tagIds = collect($names)->map(
+            fn(string $name) =>
+            Tag::firstOrCreate(
+                ['slug' => Str::slug($name)],
+                ['name' => $name, 'color' => '#7F77DD']
+            )->id
+        );
+
+        $ticket->tags()->sync($tagIds);
     }
 }

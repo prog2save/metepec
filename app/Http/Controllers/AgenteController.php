@@ -15,6 +15,8 @@ use App\Models\Usuario;
 use App\Models\TicketRespuesta;
 use App\Models\EstadoTicket;
 use App\Models\TicketView;
+use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class AgenteController extends Controller
 {
@@ -111,7 +113,8 @@ class AgenteController extends Controller
             $input['estado'] = 'Abierto';
         }
 
-        Ticket::create($input);
+        $ticket = Ticket::create($input);
+        $this->syncTags($ticket, $request->tags);
 
         if ($request->wantsJson()) {
             return response()->json($request, 201);
@@ -176,6 +179,8 @@ class AgenteController extends Controller
             'id_direccion_municipal',
             'id_servicio',
         ]));
+
+        $this->syncTags($ticket, $request->tags ?? null);
 
         return redirect()->route('agente.tickets.index')
             ->with('success', 'Ticket actualizado exitosamente.');
@@ -282,5 +287,25 @@ class AgenteController extends Controller
             'is_after'     => $query->whereDate($column, '>', $value),
             default        => null,
         };
+    }
+
+    private function syncTags(Ticket $ticket, ?string $tagsInput): void
+    {
+        if (empty($tagsInput)) {
+            $ticket->tags()->detach();
+            return;
+        }
+
+        $names = array_filter(array_map('trim', explode(',', $tagsInput)));
+
+        $tagIds = collect($names)->map(
+            fn(string $name) =>
+            Tag::firstOrCreate(
+                ['slug' => Str::slug($name)],
+                ['name' => $name, 'color' => '#7F77DD']
+            )->id
+        );
+
+        $ticket->tags()->sync($tagIds);
     }
 }

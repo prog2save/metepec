@@ -231,6 +231,57 @@
                             </select>
                         </div>
 
+                        {{-- Tags --}}
+                        <div
+                            x-data="{
+                                tags: @js(old('tags') ? explode(',', old('tags')) : $ticket->tags->pluck('name')->toArray()),
+                                input: '',
+                                addTag() {
+                                    const val = this.input.trim();
+                                    if (val && !this.tags.includes(val)) this.tags.push(val);
+                                    this.input = '';
+                                },
+                                removeTag(i) { this.tags.splice(i, 1); }
+                            }">
+                            <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                Etiquetas
+                            </label>
+
+                            {{-- Input hidden que envía al servidor --}}
+                            <input type="hidden" name="tags" :value="tags.join(',')">
+
+                            {{-- Área visual de tags --}}
+                            <div
+                                class="min-h-[2.25rem] w-full rounded-lg border border-gray-300 bg-transparent px-2 py-1.5
+                                    flex flex-wrap gap-1 items-center cursor-text
+                                    focus-within:border-brand-300 focus-within:ring-3 focus-within:ring-brand-500/10
+                                    dark:border-gray-700 dark:bg-gray-900"
+                                @click="$refs.taginput.focus()">
+                                <template x-for="(tag, i) in tags" :key="i">
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200
+                                        px-2 py-0.5 text-xs font-medium text-indigo-700
+                                      dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-300">
+                                        <span x-text="tag"></span>
+                                        <button type="button" @click.stop="removeTag(i)"
+                                            class="text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-200 leading-none">
+                                            &#x2715;
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <input
+                                    x-ref="taginput"
+                                    x-model="input"
+                                    @keydown.space.prevent="addTag()"
+                                    @keydown.enter.prevent="addTag()"
+                                    @keydown.backspace="input === '' && tags.pop()"
+                                    @blur="addTag()"
+                                    type="text"
+                                    class="flex-1 min-w-[100px] bg-transparent text-sm text-gray-800 placeholder:text-gray-400
+                                    focus:outline-none dark:text-white/90 dark:placeholder:text-white/30">
+                            </div>
+                        </div>
+
                         {{-- Tipo --}}
                         <div>
                             <label for="tipo_ticket" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
@@ -517,37 +568,37 @@
             </div>
 
             {{-- Tickets recientes del solicitante --}}
-                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
-                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            Tickets recientes del solicitante
-                        </h3>
-                    </div>
+            <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                    <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Tickets recientes del solicitante
+                    </h3>
+                </div>
 
-                    <div class="p-4 space-y-3">
-                        @forelse($tickets_creados as $ticket_creado)
-                        <div class="rounded-lg border border-gray-100 p-3 dark:border-gray-800">
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="min-w-0">
-                                    <p class="text-sm font-medium text-gray-800 dark:text-white/90 truncate">
-                                        {{ $ticket_creado->asunto }}
-                                    </p>
-                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                        Creado: {{ $ticket_creado->created_at->format('d/m/Y H:i') }}
-                                    </p>
-                                </div>
+                <div class="p-4 space-y-3">
+                    @forelse($tickets_creados as $ticket_creado)
+                    <div class="rounded-lg border border-gray-100 p-3 dark:border-gray-800">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="text-sm font-medium text-gray-800 dark:text-white/90 truncate">
+                                    {{ $ticket_creado->asunto }}
+                                </p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    Creado: {{ $ticket_creado->created_at->format('d/m/Y H:i') }}
+                                </p>
+                            </div>
 
-                                <span class="inline-flex rounded-full px-2 py-1 text-xs font-medium
+                            <span class="inline-flex rounded-full px-2 py-1 text-xs font-medium
                                 @if($ticket_creado->estado === 'Resuelto') bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
                                 @elseif($ticket_creado->estado === 'Pendiente') bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
                                 @elseif($ticket_creado->estado === 'Nuevo') bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400
                                 @elseif($ticket_creado->estado === 'Abierto') bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
                                 @else bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
                                 @endif">
-                                    {{ $ticket_creado->estado }}
-                                </span>
-                            </div>
-                            <!--
+                                {{ $ticket_creado->estado }}
+                            </span>
+                        </div>
+                        <!--
                             <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                                 <div>
                                     <p class="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600 mb-0.5">
@@ -573,14 +624,14 @@
                                 </div>
                             </div>
 -->
-                        </div>
-                        @empty
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Este solicitante no tiene otros tickets recientes.
-                        </p>
-                        @endforelse
                     </div>
+                    @empty
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Este solicitante no tiene otros tickets recientes.
+                    </p>
+                    @endforelse
                 </div>
+            </div>
 
         </div>
 

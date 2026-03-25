@@ -154,7 +154,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($tickets as $t)
+                @foreach ($tickets as $t)
                 <tr class="border-b border-gray-100 dark:border-gray-800">
 
                     {{-- ID --}}
@@ -238,13 +238,7 @@
                     </td>
 
                 </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="px-4 py-10 text-center text-gray-400 text-theme-sm dark:text-gray-600">
-                        No tienes tickets asignados por el momento.
-                    </td>
-                </tr>
-                @endforelse
+                @endforeach ($tickets as $t)
             </tbody>
         </table>
     </div>
@@ -254,27 +248,30 @@
 @endsection
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    if (document.querySelector('#tabla-tickets')) {
-        new DataTable('#tabla-tickets', {
-            responsive: true,
-            pageLength: 10,
-            columnDefs: [
-                { orderable: false, targets: [7] }
-            ],
-            language: {
-                search: "Buscar:",
-                lengthMenu: "Mostrar _MENU_ tickets por página",
-                zeroRecords: "No se encontraron tickets",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
-                infoEmpty: "Mostrando 0 a 0 de 0 tickets",
-                emptyTable: "No hay tickets disponibles",
-                paginate: {
-                    next: "Siguiente",
-                    previous: "Anterior"
+    document.addEventListener('DOMContentLoaded', function() {
+        const selector = '#tabla-tickets';
+
+        if (document.querySelector(selector) && !DataTable.isDataTable(selector)) {
+            new DataTable(selector, {
+                responsive: true,
+                pageLength: 10,
+                columnDefs: [{
+                    orderable: false,
+                    targets: [7]
+                }],
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ tickets por página",
+                    zeroRecords: "No se encontraron tickets",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
+                    infoEmpty: "Mostrando 0 a 0 de 0 tickets",
+                    emptyTable: "No hay tickets disponibles",
+                    paginate: {
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    }
                 }
-            }
-        });
-    }
-});
+            });
+        }
+    });
 </script>

@@ -43,6 +43,7 @@ class TicketStore extends FormRequest
                 'longitud' => ['nullable', 'numeric'],
 
                 'observaciones' => ['nullable', 'string'],
+                'tags' => 'nullable|string',
             ];
         }
         return [
@@ -78,6 +79,7 @@ class TicketStore extends FormRequest
                 'mimes:jpg,jpeg,png,pdf,doc,docx',
                 'max:5120', // 5 MB por archivo
             ],
+            'tags' => ['nullable','string'],
         ];
     }
 

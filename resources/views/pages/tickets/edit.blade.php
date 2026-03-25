@@ -312,6 +312,57 @@
                             </select>
                         </div>
 
+                        {{-- Tags --}}
+                        <div
+                            x-data="{
+                                tags: @js(old('tags') ? explode(',', old('tags')) : $ticket->tags->pluck('name')->toArray()),
+                                input: '',
+                                addTag() {
+                                    const val = this.input.trim();
+                                    if (val && !this.tags.includes(val)) this.tags.push(val);
+                                    this.input = '';
+                                },
+                                removeTag(i) { this.tags.splice(i, 1); }
+                            }">
+                            <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                Etiquetas
+                            </label>
+
+                            {{-- Input hidden que envía al servidor --}}
+                            <input type="hidden" name="tags" :value="tags.join(',')">
+
+                            {{-- Área visual de tags --}}
+                            <div
+                                class="min-h-[2.25rem] w-full rounded-lg border border-gray-300 bg-transparent px-2 py-1.5
+                                    flex flex-wrap gap-1 items-center cursor-text
+                                    focus-within:border-brand-300 focus-within:ring-3 focus-within:ring-brand-500/10
+                                    dark:border-gray-700 dark:bg-gray-900"
+                                @click="$refs.taginput.focus()">
+                                <template x-for="(tag, i) in tags" :key="i">
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200
+                                        px-2 py-0.5 text-xs font-medium text-indigo-700
+                                      dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-300">
+                                        <span x-text="tag"></span>
+                                        <button type="button" @click.stop="removeTag(i)"
+                                            class="text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-200 leading-none">
+                                            &#x2715;
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <input
+                                    x-ref="taginput"
+                                    x-model="input"
+                                    @keydown.space.prevent="addTag()"
+                                    @keydown.enter.prevent="addTag()"
+                                    @keydown.backspace="input === '' && tags.pop()"
+                                    @blur="addTag()"
+                                    type="text"
+                                    class="flex-1 min-w-[100px] bg-transparent text-sm text-gray-800 placeholder:text-gray-400
+                                    focus:outline-none dark:text-white/90 dark:placeholder:text-white/30">
+                            </div>
+                        </div>
+
                         {{-- Estado --}}
                         <div>
                             <label for="estado" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
