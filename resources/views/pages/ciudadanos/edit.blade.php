@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Editar Ciudadano')
 @section('content')
     <x-common.page-breadcrumb pageTitle="Editar Ciudadano" />
     <div class="space-y-6">

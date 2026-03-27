@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Vistas')
 @section('content')
 
 <div class="flex gap-0 -m-4 md:-m-6 min-h-screen">

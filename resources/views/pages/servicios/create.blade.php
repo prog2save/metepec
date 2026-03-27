@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+@section('title', 'Crear Servicio')
 <x-common.page-breadcrumb pageTitle="Agregar Dirección Municipal" />
 <div class="space-y-6">
 

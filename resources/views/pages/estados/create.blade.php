@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Crear estado del ticket')
+@section('title', 'Crear Estado del ticket')
 
 @section('content')
 <x-common.page-breadcrumb pageTitle="Crear Estado del Ticket" />

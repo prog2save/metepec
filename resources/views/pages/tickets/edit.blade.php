@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Editar Ticket')
 @section('content')
 <x-common.page-breadcrumb pageTitle="Editar Ticket" />
 

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Ticket")
 @section('content')
 <x-common.page-breadcrumb pageTitle="Ticket #{{ $ticket->id }}" />
 

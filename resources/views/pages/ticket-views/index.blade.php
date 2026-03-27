@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Vistas')
 @section('content')
 
 <style>

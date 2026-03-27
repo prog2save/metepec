@@ -127,9 +127,83 @@
                 </ul>
             </div>
         </div>
+        {{-- Filtro Tags --}}
+        <div x-data="{
+            open: false,
+            search: '',
+            tags: @js($tags->map(fn($t) => ['slug' => $t->slug, 'name' => $t->name, 'color' => $t->color])),
+            get filtered() {
+                if (!this.search.trim()) return this.tags;
+                return this.tags.filter(t => t.name.toLowerCase().includes(this.search.toLowerCase()));
+                }
+            }" class="relative">
 
+            <button
+                @click="open = !open; if(open) $nextTick(() => $refs.searchInput.focus())"
+                class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition
+                {{ request('tag') ? 'border-brand-500 text-brand-600 dark:text-brand-400' : 'border-gray-200 text-gray-500 dark:border-gray-700 dark:text-gray-400' }}
+                bg-white dark:bg-white/[0.03]">
+                Etiqueta
+                @if(request('tag'))
+                <span class="text-xs font-semibold">
+                    · {{ $tags->firstWhere('slug', request('tag'))?->name }}
+                </span>
+                @endif
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+                </svg>
+            </button>
+
+            <div x-show="open" @click.outside="open = false; search = ''" x-transition
+                class="absolute left-0 z-50 mt-1 w-52 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+
+                {{-- Buscador --}}
+                <div class="px-2 pt-2 pb-1 border-b border-gray-100 dark:border-gray-800">
+                    <input
+                        x-ref="searchInput"
+                        x-model="search"
+                        type="text"
+                        placeholder="Buscar etiqueta..."
+                        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs
+                            text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-300
+                            dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:placeholder:text-gray-600" />
+                </div>
+
+                {{-- Lista filtrada --}}
+                <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700 dark:text-gray-300">
+
+                    <template x-if="filtered.length === 0">
+                        <li class="px-4 py-2 text-xs italic text-gray-400 dark:text-gray-600">
+                            Sin coincidencias
+                        </li>
+                    </template>
+
+                    <template x-for="tag in filtered" :key="tag.slug">
+                        <li>
+                            <a :href="`{{ url()->current() }}?tag=${tag.slug}&page=1`"
+                                class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/[0.05]
+                                {{ request('tag') ? 'text-brand-600 font-medium bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400' : '' }}"
+                                :class="tag.slug === '{{ request('tag') }}' ? 'text-brand-600 font-medium bg-brand-50 dark:bg-brand-900/20 dark:text-brand-400' : ''">
+                                <span class="h-2 w-2 rounded-full shrink-0" :style="`background-color: ${tag.color}`"></span>
+                                <span x-text="tag.name"></span>
+                            </a>
+                        </li>
+                    </template>
+
+                    @if(request('tag'))
+                    <li class="border-t border-gray-100 dark:border-gray-700">
+                        <a href="{{ request()->fullUrlWithQuery(['tag' => null, 'page' => 1]) }}"
+                            class="flex items-center px-4 py-2 text-brand-500 hover:bg-gray-50 dark:hover:bg-white/[0.05]">
+                            Borrar filtro
+                        </a>
+                    </li>
+                    @endif
+
+                </ul>
+            </div>
+        </div>
         {{-- Limpiar todos --}}
-        @if(request('estado') || request('canal'))
+        @if(request('estado') || request('canal') || request('tag'))
         <a href="{{ route('agente.tickets.index') }}"
             class="text-xs text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition">
             Limpiar todos los filtros
@@ -140,7 +214,7 @@
 
     <div class="max-w-full overflow-x-auto custom-scrollbar p-3">
 
-        <table id="tabla-tickets" class="w-full min-w-[1102px] p-2">
+        <table id="tabla-tickets-agente" class="w-full min-w-[1102px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[55px]">ID</th>
@@ -238,7 +312,7 @@
                     </td>
 
                 </tr>
-                @endforeach ($tickets as $t)
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -249,7 +323,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const selector = '#tabla-tickets';
+        const selector = '#tabla-tickets-agente';
 
         if (document.querySelector(selector) && !DataTable.isDataTable(selector)) {
             new DataTable(selector, {

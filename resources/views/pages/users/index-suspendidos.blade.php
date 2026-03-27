@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Usuarios Suspendidos')
 @section('content')
     <x-common.page-breadcrumb pageTitle="Usuarios Suspendidos" />
     <div class="space-y-6">

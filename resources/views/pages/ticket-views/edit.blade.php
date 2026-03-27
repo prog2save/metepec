@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Editar Vista')
 @section('content')
 
 <div class="mb-6">

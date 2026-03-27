@@ -58,11 +58,16 @@ class AgenteController extends Controller
             $query->where('id_canal', $request->canal); //Llamada del filtro de canal de ingreso
         }
 
+        if ($request->filled('tag')) {
+            $query->whereHas('tags', fn($q) => $q->where('slug', $request->tag));
+        }
+
         $tickets = $query->latest()->paginate(15)->withQueryString();
         $canales = CanalIngreso::orderBy('nombre')->get();
+        $tags = Tag::orderBy('name')->get(); 
         $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
 
-        return view('pages.agente.tickets.index', compact('tickets', 'canales', 'estados'));
+        return view('pages.agente.tickets.index', compact('tickets', 'canales', 'estados', 'tags'));
     }
 
     //Resolver sin entrar a editar el ticket

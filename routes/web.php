@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TicketViewController;
+use App\Http\Controllers\MacroController;
 
 // Rutas publicas de autenticacion (solo para no autenticados)
 Route::middleware('guest')->group(function () {
@@ -100,6 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/tickets/{id}/resuelto', [TicketController::class, 'tickethecho'])->name('tickets.tickethecho');
     Route::resource('servicios', ServiciosController::class);
     Route::resource('estados', EstadoTicketController::class);
+    Route::resource('macros', MacroController::class);
+    Route::patch('macros/{macro}/toggle', [MacroController::class, 'toggleActive'])->name('macros.toggle');
 
     Route::prefix('ticket-views')->name('ticket-views.')->group(function () {
             Route::get('/',                  [TicketViewController::class, 'index'])->name('index');

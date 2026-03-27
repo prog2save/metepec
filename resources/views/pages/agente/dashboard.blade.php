@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Agente')
 @section('content')
 
 {{-- Header --}}
@@ -49,7 +49,7 @@
     </div>
 
     <div class="max-w-full overflow-x-auto p-3">
-        <table id="tabla-tickets" class="w-full min-w-[900px] p-2">
+        <table id="tabla-tickets-dashboard" class="w-full min-w-[900px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[55px]">ID</th>
@@ -156,8 +156,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    if (document.querySelector('#tabla-tickets')) {
-        new DataTable('#tabla-tickets', {
+    if (document.querySelector('#tabla-tickets-dashboard')) {
+        new DataTable('#tabla-tickets-dashboard', {
             responsive: true,
             pageLength: 10,
             columnDefs: [

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Admin')
 @section('content')
 
 {{-- Header --}}
@@ -38,7 +38,7 @@
 </div>
 
 {{-- Tabla de tickets asignados --}}
-<div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+<div class="overflow-hidden p-3 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
 
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
         <h2 class="text-base font-semibold text-gray-800 dark:text-white/90">Tickets asignados</h2>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="max-w-full overflow-x-auto">
-        <table id="tabla-tickets" class="w-full min-w-[900px] p-2">
+        <table id="tabla-tickets-admin" class="w-full min-w-[900px] p-2">
             <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
                     <th class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400 min-w-[55px]">ID</th>
@@ -62,7 +62,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($tickets as $t)
+                @foreach ($tickets as $t)
                 <tr class="border-b border-gray-100 dark:border-gray-800">
 
                     {{-- ID --}}
@@ -136,15 +136,8 @@
                             @endif
                         </form>
                     </td>
-
                 </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="px-4 py-10 text-center text-gray-400 text-theme-sm dark:text-gray-600">
-                        No tienes tickets asignados por el momento.
-                    </td>
-                </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -155,21 +148,29 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        new DataTable('#tabla-tickets', {
-            searchable: true,
-            perPage: 10,
-            columns: [{
-                    select: [6],
-                    sortable: false
-                } // Acciones y Completar sin ordenamiento
+document.addEventListener('DOMContentLoaded', function () {
+    const selector = '#tabla-tickets-admin';
+
+    if (document.querySelector(selector) && !DataTable.isDataTable(selector)) {
+        new DataTable(selector, {
+            responsive: true,
+            pageLength: 10,
+            columnDefs: [
+                { orderable: false, targets: [6] }
             ],
-            labels: {
-                placeholder: "Buscar tickets...",
-                perPage: "Tickets por página",
-                noRows: "No se encontraron tickets",
-                info: "Mostrando {start} a {end} de {rows} tickets"
+            language: {
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ tickets por página",
+                zeroRecords: "No se encontraron tickets",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ tickets",
+                infoEmpty: "Mostrando 0 a 0 de 0 tickets",
+                emptyTable: "No hay tickets disponibles",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
             }
         });
-    });
+    }
+});
 </script>
