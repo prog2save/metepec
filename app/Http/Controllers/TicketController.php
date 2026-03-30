@@ -12,6 +12,7 @@ use App\Models\Usuario;
 use App\Models\CanalIngreso;
 use App\Models\EstadoTicket;
 use App\Models\Tag;
+use App\Models\Macro;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
@@ -58,7 +59,11 @@ class TicketController extends Controller
             ->orderBy('nombre_agente')
             ->get();
 
-        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados'));
+        $macros = Macro::with('actions')->where('active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('pages.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'canales', 'estados', 'macros'));
     }
 
     /**

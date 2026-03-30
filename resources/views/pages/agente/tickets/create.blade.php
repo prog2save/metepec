@@ -180,7 +180,8 @@
                             <select id="id_ciudadano" name="id_ciudadano" class="w-full">
                                 <option value="">Selecciona un solicitante</option>
                                 @foreach($ciudadanos as $c)
-                                <option value="{{ $c->id }}" {{ old('id_ciudadano') == $c->id ? 'selected' : '' }}>
+                                <option value="{{ $c->id }}"
+                                    {{ (string) old('id_ciudadano', $solicitanteSeleccionado->id ?? '') === (string) $c->id ? 'selected' : '' }}>
                                     {{ $c->nombre }} {{ $c->apellido_paterno }} {{ $c->apellido_materno }}
                                 </option>
                                 @endforeach
@@ -416,7 +417,7 @@
             </div>
 
             {{-- ════════════════════════════════
-                 COLUMNA DERECHA — Contenido
+                 COLUMNA CENTRAL — Contenido
             ════════════════════════════════ --}}
             <div class="flex-1 min-w-0">
                 <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900 flex flex-col">
@@ -463,8 +464,128 @@
 
                 </div>
             </div>
+            {{-- ════════════════════════════════
+                COLUMNA DERECHA — Solicitante
+            ════════════════════════════════ --}}
+            <div class="w-56 shrink-0 space-y-3">
 
+                {{-- Info solicitante --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            Solicitante
+                        </h3>
+                    </div>
+
+                    <div class="p-4 space-y-3">
+                        @if($solicitanteSeleccionado)
+
+                            <div class="flex items-center gap-3">
+                                <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                    {{ strtoupper(substr($solicitanteSeleccionado->nombre ?? '?', 0, 1)) }}
+                                </span>
+                                <div class="min-w-0">
+                                    <p class="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                                        {{ $solicitanteSeleccionado->nombre ?? '–' }}
+                                        {{ $solicitanteSeleccionado->apellido_paterno ?? '' }}
+                                        {{ $solicitanteSeleccionado->apellido_materno ?? '' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            @if($solicitanteSeleccionado->email)
+                            <div>
+                                <p class="mb-0.5 text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                                    Correo
+                                </p>
+                                <a href="mailto:{{ $solicitanteSeleccionado->email }}"
+                                    class="break-all text-xs text-brand-600 hover:underline dark:text-brand-400">
+                                    {{ $solicitanteSeleccionado->email }}
+                                </a>
+                            </div>
+                            @endif
+
+                            @if($solicitanteSeleccionado->telefono_principal)
+                            <div>
+                                <p class="mb-0.5 text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                                    Teléfono principal
+                                </p>
+                                <a href="tel:{{ $solicitanteSeleccionado->telefono_principal }}"
+                                    class="text-xs text-gray-700 dark:text-gray-300">
+                                    {{ $solicitanteSeleccionado->telefono_principal }}
+                                </a>
+                            </div>
+                            @endif
+
+                            @if($solicitanteSeleccionado->telefono_alterno)
+                            <div>
+                                <p class="mb-0.5 text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                                    Teléfono alterno
+                                </p>
+                                <a href="tel:{{ $solicitanteSeleccionado->telefono_alterno }}"
+                                    class="text-xs text-gray-700 dark:text-gray-300">
+                                    {{ $solicitanteSeleccionado->telefono_alterno }}
+                                </a>
+                            </div>
+                            @endif
+
+                        @else
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Selecciona un solicitante para ver su información aquí.
+                            </p>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tickets recientes del solicitante --}}
+                <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
+                    <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+                        <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            Tickets recientes del solicitante
+                        </h3>
+                    </div>
+
+                    <div class="p-4 space-y-3">
+                        @if($solicitanteSeleccionado)
+                            @forelse($ticketsRecientesSolicitante as $ticketReciente)
+                                <div class="rounded-lg border border-gray-100 p-3 dark:border-gray-800">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <p class="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                                                {{ $ticketReciente->asunto }}
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                Creado: {{ $ticketReciente->created_at->format('d/m/Y H:i') }}
+                                            </p>
+                                        </div>
+
+                                        <span class="inline-flex rounded-full px-2 py-1 text-xs font-medium
+                                            @if($ticketReciente->estado === 'Resuelto') bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                                            @elseif($ticketReciente->estado === 'Pendiente') bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
+                                            @elseif($ticketReciente->estado === 'Nuevo') bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400
+                                            @elseif($ticketReciente->estado === 'Abierto') bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
+                                            @else bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
+                                            @endif">
+                                            {{ $ticketReciente->estado }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Este solicitante no tiene otros tickets recientes.
+                                </p>
+                            @endforelse
+                        @else
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Aún no hay solicitante seleccionado.
+                            </p>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
         </div>
+
     </form>
 </div>
 
@@ -552,6 +673,31 @@
             });
         }
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const abrirModalCiudadano = @json($abrirModalCiudadano ?? false);
+    const telefonoBuscado = @json($telefono_clean ?? '');
+
+    if (abrirModalCiudadano) {
+        abrirModal('modalCrearCiudadano');
+
+        setTimeout(() => {
+            const inputTelefono = document.getElementById('modal_telefono_principal');
+
+            if (inputTelefono) {
+                inputTelefono.value = telefonoBuscado;
+                inputTelefono.dispatchEvent(new Event('input', { bubbles: true }));
+                inputTelefono.dispatchEvent(new Event('change', { bubbles: true }));
+                inputTelefono.focus();
+            }
+        }, 300);
+    }
+});
+</script>
+<script>
+console.log('abrirModalCiudadano:', @json($abrirModalCiudadano ?? false));
+console.log('telefono_clean:', @json($telefono_clean ?? ''));
 </script>
 @endpush
 

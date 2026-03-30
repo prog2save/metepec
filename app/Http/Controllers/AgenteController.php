@@ -16,6 +16,7 @@ use App\Models\TicketRespuesta;
 use App\Models\EstadoTicket;
 use App\Models\TicketView;
 use App\Models\Tag;
+use App\Models\Macro;
 use Illuminate\Support\Str;
 
 class AgenteController extends Controller
@@ -64,8 +65,9 @@ class AgenteController extends Controller
 
         $tickets = $query->latest()->paginate(15)->withQueryString();
         $canales = CanalIngreso::orderBy('nombre')->get();
-        $tags = Tag::orderBy('name')->get(); 
+        $tags = Tag::orderBy('name')->get();
         $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
+
 
         return view('pages.agente.tickets.index', compact('tickets', 'canales', 'estados', 'tags'));
     }
@@ -85,8 +87,40 @@ class AgenteController extends Controller
         return redirect()->back()->with('success', 'Ticket marcado como resuelto.');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $telefono = $request->query('telefono');
+        $telefono_clean = null;
+        $solicitanteSeleccionado = null;
+        $ticketsRecientesSolicitante = collect();
+        $abrirModalCiudadano = false;
+
+        if ($telefono) {
+            $telefono_clean = preg_replace('/\D/', '', $telefono);
+
+            if (!empty($telefono_clean)) {
+                $solicitanteSeleccionado = Ciudadano::where(function ($query) use ($telefono_clean) {
+                    $query->where('telefono_principal', $telefono_clean)
+                        ->orWhere('telefono_alterno', $telefono_clean); 
+                })->first();
+
+                if (!$solicitanteSeleccionado) {
+                    $abrirModalCiudadano = true;
+                }
+            }
+        }
+
+        if (!$solicitanteSeleccionado && old('id_ciudadano')) {
+            $solicitanteSeleccionado = Ciudadano::find(old('id_ciudadano'));
+        }
+
+        if ($solicitanteSeleccionado) {
+            $ticketsRecientesSolicitante = Ticket::where('id_ciudadano', $solicitanteSeleccionado->id)
+                ->latest()
+                ->take(3)
+                ->get();
+        }
+
         $ciudadanos = Ciudadano::select('id', 'nombre', 'apellido_paterno', 'apellido_materno')
             ->orderBy('nombre')->get();
 
@@ -99,7 +133,11 @@ class AgenteController extends Controller
         $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')
             ->where('activo', true)->orderBy('nombre_servicio')->get();
 
-        return view('pages.agente.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios'));
+        $macros = Macro::with('actions')->where('active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('pages.agente.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'macros', 'solicitanteSeleccionado', 'telefono', 'ticketsRecientesSolicitante','abrirModalCiudadano', 'telefono_clean'));
     }
 
     public function store(TicketStore $request)
@@ -165,7 +203,7 @@ class AgenteController extends Controller
             ->where('id_ciudadano', $ticket->id_ciudadano)
             ->where('id', '!=', $ticket->id) // excluir el ticket actual
             ->orderByDesc('created_at')
-            ->take(5) 
+            ->take(5)
             ->get();
 
 

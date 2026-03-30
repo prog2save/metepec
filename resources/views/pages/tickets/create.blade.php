@@ -332,7 +332,9 @@
                                     this.input = '';
                                 },
                                 removeTag(i) { this.tags.splice(i, 1); }
-                            }">
+                            }"
+                            @set-tags.window="tags = $event.detail.tags"
+                        >
                             <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                                 Etiquetas
                             </label>
@@ -489,6 +491,248 @@
 
         </div>
     </form>
+</div>
+
+{{-- macros --}}
+<div
+    x-data="{
+        open: false,
+        search: '',
+        canales: @js($canales->map(fn($c) => [
+            'id' => $c->id,
+            'nombre' => $c->nombre
+        ])->values()),
+        macros: @js($macros->map(fn($m) => [
+            'id' => $m->id,
+            'name' => $m->name,
+            'actions' => $m->actions->map(fn($a) => [
+                'field' => $a->field,
+                'value' => $a->value,
+            ])->values(),
+        ])->values()),
+
+        get filtered() {
+            const q = this.search.trim().toLowerCase();
+            if (!q) return this.macros;
+
+            return this.macros.filter(m =>
+                (m.name || '').toLowerCase().includes(q)
+            );
+        },
+
+        setFieldValue(name, value = '') {
+            const el = document.querySelector(`[name='${name}']`);
+            if (!el) return false;
+
+            if (el.tomselect) {
+                el.tomselect.setValue(String(value || ''));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+                return true;
+            }
+
+            el.value = value ?? '';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        },
+
+        clearTomSelect(name) {
+            const el = document.querySelector(`[name='${name}']`);
+            if (!el || !el.tomselect) return;
+
+            el.tomselect.clear();
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        },
+
+        resetFields() {
+            [
+                'asunto',
+                'descripcion',
+                'observaciones',
+                'tipo_ticket',
+                'prioridad',
+                'estado',
+                'canal_ingreso',
+                'fecha_resolucion'
+            ].forEach(name => {
+                const el = document.querySelector(`[name='${name}']`);
+                if (!el) return;
+
+                el.value = '';
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+
+            [
+                'id_ciudadano',
+                'id_agente_asignado',
+                'id_direccion_municipal',
+                'id_servicio'
+            ].forEach(name => this.clearTomSelect(name));
+
+            window.dispatchEvent(new CustomEvent('set-tags', {
+                detail: { tags: [] }
+            }));
+        },
+
+        applyMacro(macro) {
+            this.resetFields();
+
+            let direccionValue = null;
+            let servicioValue = null;
+
+            macro.actions.forEach(action => {
+                const field = action.field;
+                const value = action.value ?? '';
+
+                if (!field) return;
+
+                // Tags
+                if (field === 'tags') {
+                    window.dispatchEvent(new CustomEvent('set-tags', {
+                        detail: {
+                            tags: String(value)
+                                .split(',')
+                                .map(t => t.trim())
+                                .filter(Boolean)
+                        }
+                    }));
+                    return;
+                }
+
+                // Canal guardado por id, aplicado al input/select visible del formulario
+                if (field === 'id_canal' || field === 'id_canal_ingreso') {
+                    const canal = this.canales.find(c => String(c.id) === String(value));
+                    if (!canal) return;
+
+                    // Ajusta aquí según el name real de tu formulario
+                    this.setFieldValue('canal_ingreso', canal.nombre);
+                    return;
+                }
+
+                // Aplicar después en orden
+                if (field === 'id_direccion_municipal') {
+                    direccionValue = value;
+                    return;
+                }
+
+                if (field === 'id_servicio') {
+                    servicioValue = value;
+                    return;
+                }
+
+                this.setFieldValue(field, value);
+            });
+
+            // Dirección primero
+            if (direccionValue) {
+                this.setFieldValue('id_direccion_municipal', direccionValue);
+            }
+
+            // Servicio después de que se recarguen las opciones dependientes
+            if (servicioValue) {
+                setTimeout(() => {
+                    this.setFieldValue('id_servicio', servicioValue);
+                }, 250);
+            }
+
+            this.open = false;
+            this.search = '';
+        }
+    }"
+    class="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none"
+    :class="{
+        'xl:left-[290px]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
+        'xl:left-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
+        'left-0': $store.sidebar.isMobileOpen
+    }"
+>
+    <div class="w-full max-w-screen-xl px-6 pointer-events-auto">
+
+        <div
+            x-show="open"
+            x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-2"
+            @click.outside="open = false"
+            class="mb-1 rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900 overflow-hidden"
+            style="max-height: 340px;"
+        >
+            <div class="flex items-center gap-3 border-b border-gray-100 px-4 py-2.5 dark:border-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Aplicar macro
+                </span>
+            </div>
+
+            {{-- buscador --}}
+            <div class="border-b border-gray-100 px-4 py-2.5 dark:border-gray-800">
+                <input
+                    x-ref="searchInput"
+                    x-model="search"
+                    type="text"
+                    placeholder="Buscar macro..."
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                >
+            </div>
+
+            {{-- Lista de macros --}}
+            <ul class="overflow-y-auto divide-y divide-gray-50 dark:divide-gray-800" style="max-height: 260px;">
+
+                <template x-if="filtered.length === 0">
+                    <li class="px-4 py-3 text-xs italic text-gray-400 dark:text-gray-600">
+                        Sin coincidencias
+                    </li>
+                </template>
+
+                <template x-for="macro in filtered" :key="macro.id">
+                    <li>
+                        <button
+                            type="button"
+                            @click="applyMacro(macro)"
+                            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between group"
+                        >
+                            <span x-text="macro.name"></span>
+                            <span class="text-xs text-gray-400 dark:text-gray-600 group-hover:text-brand-500 transition-colors">
+                                Aplicar
+                            </span>
+                        </button>
+                    </li>
+                </template>
+
+            </ul>
+        </div>
+
+        {{-- Botón tab inferior --}}
+        <button
+            type="button"
+            @click="open = !open; if (open) setTimeout(() => $refs.searchInput?.focus(), 50)"
+            class="flex items-center gap-2 rounded-t-xl border border-b-0 border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-500 shadow-lg transition hover:text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white/90"
+            :class="open ? 'text-brand-600 dark:text-brand-400' : ''"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+
+            Macros
+
+            <span
+                class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                x-text="macros.length"
+            ></span>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+        </button>
+
+    </div>
 </div>
 
 @include('components.ciudadanos.modal-crear')
