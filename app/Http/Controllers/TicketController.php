@@ -14,16 +14,25 @@ use App\Models\EstadoTicket;
 use App\Models\Tag;
 use App\Models\Macro;
 use Illuminate\Support\Str;
+use App\Services\GeocodingService;
+
 
 class TicketController extends Controller
 {
+    private GeocodingService $geocoding;
+
+    public function __construct(GeocodingService $geocoding)
+    {
+        $this->geocoding = $geocoding; //inyectar servicio
+    }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $tickets = Ticket::with('ciudadano', 'agente', 'estado')
-            ->orderByDesc('id')
+            ->where('activo', 1)
+            ->orderByDesc('created_at')
             ->get();
         return view('pages.tickets.index', compact('tickets'));
     }
@@ -71,7 +80,42 @@ class TicketController extends Controller
      */
     public function store(TicketStore $request)
     {
+
         $input = $request->validated();
+
+        $direccionArcgis = collect([
+            $request->input('ticket_calle'),
+            $request->input('ticket_numero'),
+            $request->input('ticket_colonia'),
+            $request->input('ticket_municipio'),
+            $request->input('ticket_estado'),
+            $request->input('ticket_pais'),
+        ])
+        ->filter(fn ($valor) => filled($valor))
+        ->implode(' ');
+
+        logger()->info('Dirección enviada a ArcGIS', [
+            'direccion' => $direccionArcgis
+        ]);
+
+        $coordenadas = null;
+
+        if (
+            filled($request->ticket_calle) &&
+            filled($request->ticket_municipio) &&
+            filled($request->ticket_estado)
+        ) {
+            $coordenadas = $this->geocoding->getCoordinates($direccionArcgis);
+
+            if (!$coordenadas) {
+                logger()->warning('ArcGIS no encontró coordenadas', [
+                    'direccion' => $direccionArcgis
+                ]);
+            } else {
+                $input['latitud'] = $coordenadas['lat'];
+                $input['longitud'] = $coordenadas['lng'];
+            }
+        }
 
         if (!empty($input['canal_ingreso'])) {
             $canal = CanalIngreso::firstOrCreate(['nombre' => $input['canal_ingreso']]);
@@ -215,7 +259,7 @@ class TicketController extends Controller
      */
     public function destroy(string $id)
     {
-        Ticket::where('id', $id)->update(['activo' => false]);
+        Ticket::where('id', $id)->update(['activo' => '']);
         return redirect()->back()->with('success', 'Ticket eliminado exitosamente.');
     }
 

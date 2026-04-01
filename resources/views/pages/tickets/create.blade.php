@@ -447,6 +447,100 @@
                             style="min-height: 180px">{{ old('descripcion') }}</textarea>
                     </div>
 
+                    {{-- Ubicación del ticket (opcional) --}}
+                    <div class="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
+                        <div class="mb-3">
+                            <label class="block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
+                                Dirección del ticket
+                            </label>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                (Opcional)
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div class="md:col-span-2">
+                                <label for="ticket_calle" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Calle
+                                </label>
+                                <input
+                                    type="text"
+                                    id="ticket_calle"
+                                    name="ticket_calle"
+                                    value="{{ old('ticket_calle') }}"
+                                    placeholder="Ej. Av. Reforma"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                            </div>
+
+                            <div>
+                                <label for="ticket_numero" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Número
+                                </label>
+                                <input
+                                    type="text"
+                                    id="ticket_numero"
+                                    name="ticket_numero"
+                                    value="{{ old('ticket_numero') }}"
+                                    placeholder="Ej. 123"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="ticket_calle" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Colonia / Fraccionamiento
+                                </label>
+                                <input
+                                    type="text"
+                                    id="ticket_colonia"
+                                    name="ticket_colonia"
+                                    value="{{ old('ticket_colonia') }}"
+                                    placeholder="Ej. Centro Histórico"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                            </div>
+
+                            <div>
+                                <label for="ticket_municipio" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Municipio
+                                </label>
+                                <input
+                                    type="text"
+                                    id="ticket_municipio"
+                                    name="ticket_municipio"
+                                    value="{{ old('ticket_municipio') }}"
+                                    placeholder="Ej. Puebla"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="ticket_estado_ubicacion" class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                    Estado
+                                </label>
+                                <input
+                                    type="text"
+                                    id="ticket_estado_ubicacion"
+                                    name="ticket_estado"
+                                    value="{{ old('ticket_estado') }}"
+                                    placeholder="Ej. Puebla"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                                <input
+                                    type="hidden"
+                                    disabled 
+                                    id="ticket_pais_ubicacion"
+                                    name="ticket_pais"
+                                    value="{{ old('ticket_pais') }}"
+                                    placeholder="Ej. México"
+                                    value="México"
+                                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Observaciones --}}
                     <div class="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
                         <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
@@ -795,16 +889,40 @@
 
         if (agenteTs && estadoEl) {
             agenteTs.on('change', (val) => {
+                const opcionNuevo = estadoEl.querySelector('option[value="Nuevo"]');
+
                 if (val) {
-                    estadoEl.value = 'Abierto';
-                    estadoEl.disabled = true;
+                    if (opcionNuevo) opcionNuevo.hidden = true;
+
+                    if (!estadoEl.value || estadoEl.value === 'Nuevo') {
+                        estadoEl.value = 'Abierto';
+                    }
+
+                    estadoEl.dispatchEvent(new Event('change', { bubbles: true }));
                     estadoHint?.classList.remove('hidden');
                 } else {
+                    if (opcionNuevo) opcionNuevo.hidden = false;
+
                     estadoEl.value = 'Nuevo';
-                    estadoEl.disabled = false;
+                    estadoEl.dispatchEvent(new Event('change', { bubbles: true }));
                     estadoHint?.classList.add('hidden');
                 }
             });
+
+            // aplicar estado inicial al cargar si viene old('id_agente_asignado')
+            const valorInicialAgente = agenteTs.getValue();
+            const opcionNuevo = estadoEl.querySelector('option[value="Nuevo"]');
+
+            if (valorInicialAgente) {
+                if (opcionNuevo) opcionNuevo.hidden = true;
+                if (!estadoEl.value || estadoEl.value === 'Nuevo') {
+                    estadoEl.value = 'Abierto';
+                }
+                estadoHint?.classList.remove('hidden');
+            } else {
+                if (opcionNuevo) opcionNuevo.hidden = false;
+                estadoHint?.classList.add('hidden');
+            }
         }
     });
 </script>

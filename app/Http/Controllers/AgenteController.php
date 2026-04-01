@@ -18,9 +18,17 @@ use App\Models\TicketView;
 use App\Models\Tag;
 use App\Models\Macro;
 use Illuminate\Support\Str;
+use App\Services\GeocodingService;
 
 class AgenteController extends Controller
 {
+    private GeocodingService $geocoding;
+
+    public function __construct(GeocodingService $geocoding)
+    {
+        $this->geocoding = $geocoding; //inyectar servicio
+    }
+
     /**
      * Dashboard del agente.
      * Muestra resumen de sus tickets + listado paginado.
@@ -63,7 +71,7 @@ class AgenteController extends Controller
             $query->whereHas('tags', fn($q) => $q->where('slug', $request->tag));
         }
 
-        $tickets = $query->latest()->paginate(15)->withQueryString();
+        $tickets = $query->latest()->paginate(15)->withQueryString()->sortByDesc('created_at');
         $canales = CanalIngreso::orderBy('nombre')->get();
         $tags = Tag::orderBy('name')->get();
         $estados = EstadoTicket::where('activo', true)->orderBy('nombre_agente')->get();
@@ -133,16 +141,54 @@ class AgenteController extends Controller
         $servicios = Servicio::select('id', 'nombre_servicio', 'id_direccion_municipal')
             ->where('activo', true)->orderBy('nombre_servicio')->get();
 
+        $canales = CanalIngreso::select('id', 'nombre')
+            ->orderBy('nombre')
+            ->get();
+
         $macros = Macro::with('actions')->where('active', true)
             ->orderBy('name')
             ->get();
 
-        return view('pages.agente.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'macros', 'solicitanteSeleccionado', 'telefono', 'ticketsRecientesSolicitante','abrirModalCiudadano', 'telefono_clean'));
+        return view('pages.agente.tickets.create', compact('ciudadanos', 'agentes', 'direcciones', 'servicios', 'macros', 'solicitanteSeleccionado', 'telefono', 'ticketsRecientesSolicitante','abrirModalCiudadano', 'telefono_clean', 'canales'));
     }
 
     public function store(TicketStore $request)
     {
         $input = $request->validated();
+
+        $direccionArcgis = collect([
+            $request->input('ticket_calle'),
+            $request->input('ticket_numero'),
+            $request->input('ticket_colonia'),
+            $request->input('ticket_municipio'),
+            $request->input('ticket_estado'),
+            $request->input('ticket_pais'),
+        ])
+        ->filter(fn ($valor) => filled($valor))
+        ->implode(' ');
+
+        logger()->info('Dirección enviada a ArcGIS', [
+            'direccion' => $direccionArcgis
+        ]);
+
+        $coordenadas = null;
+
+        if (
+            filled($request->ticket_calle) &&
+            filled($request->ticket_municipio) &&
+            filled($request->ticket_estado)
+        ) {
+            $coordenadas = $this->geocoding->getCoordinates($direccionArcgis);
+
+            if (!$coordenadas) {
+                logger()->warning('ArcGIS no encontró coordenadas', [
+                    'direccion' => $direccionArcgis
+                ]);
+            } else {
+                $input['latitud'] = $coordenadas['lat'];
+                $input['longitud'] = $coordenadas['lng'];
+            }
+        }
 
         if (!empty($input['canal_ingreso'])) { //validar si ya existe dicho canal de ingreso
             //Si no existe crea un nuevo registro, si ya existe le corresponde el id

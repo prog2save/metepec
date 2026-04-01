@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'arcgis' => [
+        'key'          => env('ARCGIS_API_KEY'),
+        'geocode_url'  => env('ARCGIS_GEOCODE_URL'),
+    ],
 ];

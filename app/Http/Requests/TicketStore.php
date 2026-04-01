@@ -39,6 +39,10 @@ class TicketStore extends FormRequest
                 'estado' => ['required', 'string', 'max:50'],
                 'fecha_resolucion' => ['nullable', 'date', 'after_or_equal:today'],
 
+                'ticket_calle' => ['nullable', 'string', 'max:255'],
+                'ticket_numero' => ['nullable', 'string', 'max:50'],
+                'ticket_municipio' => ['nullable', 'string', 'max:150'],
+                'ticket_estado' => ['nullable', 'string', 'max:150'],
                 'latitud' => ['nullable', 'numeric'],
                 'longitud' => ['nullable', 'numeric'],
 
@@ -69,8 +73,13 @@ class TicketStore extends FormRequest
             'estado' => ['required', 'string', 'max:50'],
 
             'direccion_texto' => ['nullable', 'string', 'max:255'],
+            
             'latitud' => ['nullable', 'numeric'],
             'longitud' => ['nullable', 'numeric'],
+            'ticket_calle' => ['nullable', 'string', 'max:255'],
+            'ticket_numero' => ['nullable', 'string', 'max:50'],
+            'ticket_municipio' => ['nullable', 'string', 'max:150'],
+            'ticket_estado' => ['nullable', 'string', 'max:150'],
 
             'observaciones' => ['nullable', 'string'],
             'adjuntos' => ['nullable', 'array'],

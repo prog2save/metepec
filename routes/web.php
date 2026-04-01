@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TicketViewController;
 use App\Http\Controllers\MacroController;
+use App\Services\GeocodingService;
 
 // Rutas publicas de autenticacion (solo para no autenticados)
 Route::middleware('guest')->group(function () {
@@ -103,6 +104,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('estados', EstadoTicketController::class);
     Route::resource('macros', MacroController::class);
     Route::patch('macros/{macro}/toggle', [MacroController::class, 'toggleActive'])->name('macros.toggle');
+
+    Route::get('/test-geocode', function (Request $request, GeocodingService $geo) {
+
+        $direccion = $request->query('direccion', 'Boulevard Héroes de 5 de Mayo 410 Centro Histórico Puebla México');
+
+        $resultado = $geo->getCoordinates($direccion);
+
+        return response()->json([
+            'direccion_enviada' => $direccion,
+            'resultado' => $resultado
+        ]);
+
+    });
+    
 
     Route::prefix('ticket-views')->name('ticket-views.')->group(function () {
             Route::get('/',                  [TicketViewController::class, 'index'])->name('index');
