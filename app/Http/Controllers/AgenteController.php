@@ -133,7 +133,9 @@ class AgenteController extends Controller
             ->orderBy('nombre')->get();
 
         $agentes = Usuario::select('id', 'nombre', 'apellido', 'email')
-            ->orderBy('nombre')->get();
+            ->where('role','agente')
+            ->orderBy('nombre')
+            ->get();
 
         $direcciones = DireccionMunicipal::select('id', 'nombre_direccion')
             ->where('estatus', true)->orderBy('nombre_direccion')->get();

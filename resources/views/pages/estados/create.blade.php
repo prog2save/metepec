@@ -32,7 +32,7 @@
             {{-- Categoría --}}
             <div>
                 <label for="categoria" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Categoría
+                    Categoría <span class="text-red-500">*</span>
                     <span class="block text-xs font-normal text-gray-500 dark:text-gray-500 mt-0.5">
                         Elija una categoría de estado del sistema
                     </span>
@@ -51,7 +51,7 @@
             {{-- Nombre agente --}}
             <div>
                 <label for="nombre_agente" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Nombre (vista de agente)
+                    Nombre (vista de agente) <span class="text-red-500">*</span>
                     <span class="block text-xs font-normal text-gray-500 dark:text-gray-500 mt-0.5">
                         Estado de ticket personalizado para agentes
                     </span>

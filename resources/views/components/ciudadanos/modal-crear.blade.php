@@ -7,7 +7,7 @@
             {{-- Nombre --}}
             <div>
                 <label for="modal_nombre" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Nombre
+                    Nombre <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="modal_nombre" name="nombre"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -17,14 +17,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="modal_apellido_paterno" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Apellido Paterno
+                        Apellido Paterno <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="modal_apellido_paterno" name="apellido_paterno"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 </div>
                 <div>
                     <label for="modal_apellido_materno" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Apellido Materno
+                        Apellido Materno <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="modal_apellido_materno" name="apellido_materno"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -35,14 +35,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="modal_telefono_principal" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Teléfono
+                        Teléfono <span class="text-red-500">*</span>
                     </label>
                     <input type="number" maxlength="10" id="modal_telefono_principal" name="telefono_principal"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 </div>
                 <div>
                     <label for="modal_telefono_alterno" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Teléfono Alterno
+                        Teléfono Alterno <span class="ml-1 text-gray-400 dark:text-gray-600 normal-case font-normal">(opcional)</span>
                     </label>
                     <input type="number" maxlength="10" id="modal_telefono_alterno" name="telefono_alterno"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -52,7 +52,7 @@
             {{-- Email --}}
             <div>
                 <label for="modal_email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Email
+                    Email <span class="ml-1 text-gray-400 dark:text-gray-600 normal-case font-normal">(opcional)</span>
                 </label>
                 <input type="email" id="modal_email" name="email"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -62,14 +62,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-2">
                     <label for="modal_calle" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        Calle
+                        Calle <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="modal_calle" name="direccion_calle"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
                 </div>
                 <div>
                     <label for="modal_numero" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                        N° Exterior
+                        N°  <span class="ml-1 text-gray-400 dark:text-gray-600 normal-case font-normal">(opcional)</span>
                     </label>
                     <input type="number" id="modal_numero" name="direccion_numero"
                         class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -78,7 +78,7 @@
 
             <div>
                 <label for="modal_colonia" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Colonia
+                    Colonia <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="modal_colonia" name="direccion_colonia"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />

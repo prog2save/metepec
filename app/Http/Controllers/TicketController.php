@@ -47,6 +47,7 @@ class TicketController extends Controller
             ->get();
 
         $agentes = Usuario::select('id', 'nombre', 'apellido', 'email') // ajusta campos según tu tabla
+            ->where('role','agente')
             ->orderBy('nombre')
             ->get();
 

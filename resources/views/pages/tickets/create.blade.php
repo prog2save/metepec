@@ -189,7 +189,7 @@
                         {{-- Ciudadano --}}
                         <div>
                             <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Solicitante
+                                Solicitante <span class="text-red-500">*</span>
                             </label>
                             <select id="id_ciudadano" name="id_ciudadano" class="w-full">
                                 <option value="">Selecciona un ciudadano</option>
@@ -245,21 +245,40 @@
                                 },
                                 refreshServicios() {
                                     if (!this.tsServicio) return;
+
                                     const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
+                                    const selected = String(this.servicio || '');
+
                                     this.tsServicio.clearOptions();
                                     this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
-                                    const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
-                                    filtrados.forEach(s => this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio }));
+
+                                    const filtrados = (this.servicios || []).filter(
+                                        s => String(s.id_direccion_municipal) === dir
+                                    );
+
+                                    filtrados.forEach(s => {
+                                        this.tsServicio.addOption({
+                                            value: String(s.id),
+                                            text: s.nombre_servicio
+                                        });
+                                    });
+
                                     this.tsServicio.refreshOptions(false);
-                                    const actual = String(this.tsServicio.getValue() || '');
-                                    if (!filtrados.some(s => String(s.id) === actual)) { this.servicio = ''; this.tsServicio.clear(true); }
+
+                                    if (selected && filtrados.some(s => String(s.id) === selected)) {
+                                        this.tsServicio.setValue(selected, true);
+                                        return;
+                                    }
+
+                                    this.servicio = '';
+                                    this.tsServicio.clear(true);
                                 }
                             }"
                             class="space-y-4">
 
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                    Dirección municipal
+                                    Dirección municipal <span class="text-red-500">*</span>
                                 </label>
                                 <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
                                     <option value="">Selecciona una dirección</option>
@@ -273,10 +292,21 @@
 
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                    Servicio
+                                    Servicio <span class="text-red-500">*</span>
                                 </label>
                                 <select id="id_servicio" name="id_servicio" class="w-full">
                                     <option value="">Selecciona un servicio</option>
+                                    @if(old('id_servicio'))
+                                        @php
+                                            $servicioOld = $servicios->firstWhere('id', old('id_servicio'));
+                                        @endphp
+
+                                        @if($servicioOld)
+                                            <option value="{{ $servicioOld->id }}" selected>
+                                                {{ $servicioOld->nombre_servicio }}
+                                            </option>
+                                        @endif
+                                    @endif
                                 </select>
                                 <p class="mt-1 text-xs text-gray-400 dark:text-gray-600">Elige una dirección primero.</p>
                             </div>
@@ -285,7 +315,7 @@
                         {{-- Canal de ingreso --}}
                         <div>
                             <label for="canal_ingreso" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Canal de ingreso
+                                Canal de ingreso <span class="text-red-500">*</span>
                             </label>
                             <input type="text" id="canal_ingreso" name="canal_ingreso" value="{{ old('canal_ingreso') }}"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -294,7 +324,7 @@
                         {{-- Tipo --}}
                         <div>
                             <label for="tipo_ticket" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Tipo
+                                Tipo <span class="text-red-500">*</span>
                             </label>
                             <select name="tipo_ticket" id="tipo_ticket"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
@@ -309,7 +339,7 @@
                         {{-- Prioridad --}}
                         <div>
                             <label for="prioridad" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Prioridad
+                                Prioridad <span class="text-red-500">*</span>
                             </label>
                             <select name="prioridad" id="prioridad"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
@@ -336,7 +366,7 @@
                             @set-tags.window="tags = $event.detail.tags"
                         >
                             <label class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Etiquetas
+                                Etiquetas <span class="ml-1 text-gray-400 dark:text-gray-600 normal-case font-normal">(opcional)</span>
                             </label>
 
                             {{-- Input hidden que envía al servidor --}}
@@ -377,7 +407,7 @@
                         {{-- Estado --}}
                         <div>
                             <label for="estado" class="mb-1.5 block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                                Estado
+                                Estado <span class="text-red-500">*</span>
                             </label>
                             <select name="estado" id="estado"
                                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-9 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:opacity-60 disabled:cursor-not-allowed">
@@ -439,7 +469,7 @@
                     {{-- Descripción --}}
                     <div class="flex-1 px-5 py-4">
                         <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
-                            Descripción
+                            Descripción <span class="text-red-500">*</span>
                         </label>
                         <textarea name="descripcion" id="descripcion"
                             placeholder="Describe el problema o solicitud..."
@@ -544,7 +574,7 @@
                     {{-- Observaciones --}}
                     <div class="border-t border-gray-100 px-5 py-4 dark:border-gray-800">
                         <label class="mb-2 block text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-gray-600">
-                            Observaciones internas
+                            Observaciones internas (opcional)
                         </label>
                         <textarea name="observaciones" id="observaciones"
                             placeholder="Notas internas visibles solo para agentes..."
@@ -555,7 +585,7 @@
                     {{-- Card adjuntos --}}
                     <div class="rounded-xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-900">
                         <div class="border-b border-gray-100 px-4 py-3 dark:border-gray-800">
-                            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Archivos adjuntos</h3>
+                            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Archivos adjuntos (opcional)</h3>
                         </div>
                         <div class="p-4">
                             <input type="file" id="adjuntos" name="adjuntos[]" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"

@@ -104,7 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('estados', EstadoTicketController::class);
     Route::resource('macros', MacroController::class);
     Route::patch('macros/{macro}/toggle', [MacroController::class, 'toggleActive'])->name('macros.toggle');
-
+    /*
     Route::get('/test-geocode', function (Request $request, GeocodingService $geo) {
 
         $direccion = $request->query('direccion', 'Boulevard Héroes de 5 de Mayo 410 Centro Histórico Puebla México');
@@ -117,6 +117,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
     });
+    */
     
 
     Route::prefix('ticket-views')->name('ticket-views.')->group(function () {

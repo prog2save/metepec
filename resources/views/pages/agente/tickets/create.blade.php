@@ -233,14 +233,33 @@
                                 },
                                 refreshServicios() {
                                     if (!this.tsServicio) return;
+
                                     const dir = String(this.tsDireccion?.getValue?.() || this.direccion || '');
+                                    const selected = String(this.servicio || '');
+
                                     this.tsServicio.clearOptions();
                                     this.tsServicio.addOption({ value: '', text: 'Selecciona un servicio' });
-                                    const filtrados = (this.servicios || []).filter(s => String(s.id_direccion_municipal) === dir);
-                                    filtrados.forEach(s => this.tsServicio.addOption({ value: String(s.id), text: s.nombre_servicio }));
+
+                                    const filtrados = (this.servicios || []).filter(
+                                        s => String(s.id_direccion_municipal) === dir
+                                    );
+
+                                    filtrados.forEach(s => {
+                                        this.tsServicio.addOption({
+                                            value: String(s.id),
+                                            text: s.nombre_servicio
+                                        });
+                                    });
+
                                     this.tsServicio.refreshOptions(false);
-                                    const actual = String(this.tsServicio.getValue() || '');
-                                    if (!filtrados.some(s => String(s.id) === actual)) { this.servicio = ''; this.tsServicio.clear(true); }
+
+                                    if (selected && filtrados.some(s => String(s.id) === selected)) {
+                                        this.tsServicio.setValue(selected, true);
+                                        return;
+                                    }
+
+                                    this.servicio = '';
+                                    this.tsServicio.clear(true);
                                 }
                             }"
                             class="space-y-4">
@@ -265,6 +284,18 @@
                                 </label>
                                 <select id="id_servicio" name="id_servicio" class="w-full">
                                     <option value="">Selecciona un servicio</option>
+
+                                    @if(old('id_servicio'))
+                                        @php
+                                            $servicioOld = $servicios->firstWhere('id', old('id_servicio'));
+                                        @endphp
+
+                                        @if($servicioOld)
+                                            <option value="{{ $servicioOld->id }}" selected>
+                                                {{ $servicioOld->nombre_servicio }}
+                                            </option>
+                                        @endif
+                                    @endif
                                 </select>
                                 <p class="mt-1 text-xs text-gray-400 dark:text-gray-600">Elige una dirección primero.</p>
                             </div>
