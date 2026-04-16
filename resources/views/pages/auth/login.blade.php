@@ -1,5 +1,5 @@
 @extends('layouts.fullscreen-layout')
-
+@section('title', 'Iniciar Sesión')
 @section('content')
 <div class="relative z-1 bg-white p-6 sm:p-0 dark:bg-gray-900">
     <div class="relative flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row dark:bg-gray-900">
@@ -62,7 +62,7 @@
                                     </svg>
                                 </button>
                             </div>
-                            <!-- Recordarme -->
+                            <!-- Recordarme 
                             <div class="flex items-center justify-between">
                                 <div x-data="{ checkboxToggle: false }">
                                     <label for="remember"
@@ -87,6 +87,7 @@
                                     </label>
                                 </div>
                             </div>
+                            -->
                             <!-- Botón -->
                             <div>
                                 <button type="submit"

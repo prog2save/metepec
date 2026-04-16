@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
     <script defer src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
-    <title>{{ $title ?? 'Dashboard' }} | Tickets</title>
+    <title>@yield('title', 'Dashboard') | Tickets</title>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -92,7 +92,7 @@
             }
         })();
     </script>
-    
+
 </head>
 
 <body
@@ -110,7 +110,7 @@
     window.addEventListener('resize', checkMobile);">
 
     {{-- preloader --}}
-    <x-common.preloader/>
+    <x-common.preloader />
     {{-- preloader end --}}
 
     <div class="min-h-screen xl:flex">
@@ -133,8 +133,68 @@
 
     </div>
 
+    {{-- Modal portal target --}}
+    <div id="modal-portal"></div>
+
+
+    <script>
+        function abrirModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+
+    {{-- ══════════════════════════════
+     MODAL PREVISUALIZACIÓN
+══════════════════════════════ --}}
+    <div id="previewModal"
+        class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+
+        <div class="relative flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-4xl mx-4"
+            style="height: 90vh;">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                <span id="previewNombre"
+                    class="text-sm font-semibold text-gray-800 dark:text-white/90 truncate max-w-sm">
+                </span>
+                <div class="flex items-center gap-2">
+                    <a id="previewDescargar" href="#"
+                        class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition">
+                        Descargar
+                    </a>
+                    <button onclick="cerrarPreview()"
+                        class="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Contenido dinámico --}}
+            <div id="previewContenido"
+                class="flex-1 overflow-auto flex items-center justify-center p-4 min-h-0">
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('/js/preview-modal.js') }}"></script>
+    @stack('scripts')
+
+
+
 </body>
 
-@stack('scripts')
 
 </html>

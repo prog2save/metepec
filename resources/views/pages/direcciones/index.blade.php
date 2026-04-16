@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Direcciones')
 
 @section('content')
 <x-common.page-breadcrumb pageTitle="Direcciones Municipales" />

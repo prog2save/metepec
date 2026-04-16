@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Tickets')
 @section('content')
 <x-common.page-breadcrumb pageTitle="Tickets" />
 <div class="space-y-6">

@@ -20,6 +20,8 @@ class Usuario extends Authenticatable
         'curp',
         'password',
         'role',
+        'activo',
+        'suspendido_por'
     ];
 
     protected $hidden = [

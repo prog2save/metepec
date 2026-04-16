@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Servicios')
 @section('content')
 <x-common.page-breadcrumb pageTitle="Servicios" />
 

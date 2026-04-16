@@ -230,7 +230,7 @@
 
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Nombre del servicio
+                    Nombre del servicio <span class="text-red-500">*</span>
                 </label>
                 <input
                     x-ref="nombreCreate"
@@ -249,7 +249,7 @@
 
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Dirección municipal
+                    Dirección municipal <span class="text-red-500">*</span>
                 </label>
                 <select id="id_direccion_municipal" name="id_direccion_municipal" class="w-full">
                     <option value="">Selecciona una dirección</option>

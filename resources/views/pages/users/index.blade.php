@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Usuarios Activos')
 @section('content')
     <x-common.page-breadcrumb pageTitle="Usuarios" />
     <div class="space-y-6">

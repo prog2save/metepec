@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Editar Usuario')
 @section('content')
 <x-common.page-breadcrumb pageTitle="Editar Usuario" />
 <div class="space-y-6">
@@ -53,7 +54,7 @@
                 <select name="role" id="role"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
                     <option value="admin" {{ old('role', $usuario->role) == 'admin' ? 'selected' : '' }}>Administrador</option>
-                    <option value="ciudadano" {{ old('role', $usuario->role) == 'ciudadano' ? 'selected' : '' }}>Ciudadano</option>
+                    {{--<option value="ciudadano" {{ old('role', $usuario->role) == 'ciudadano' ? 'selected' : '' }}>Ciudadano</option>--}}
                     <option value="agente" {{ old('role', $usuario->role) == 'agente' ? 'selected' : '' }}>Agente</option>
                 </select>
             </div>

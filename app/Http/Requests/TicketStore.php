@@ -19,7 +19,7 @@ class TicketStore extends FormRequest
             return [
                 'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
                 'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
-                'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+                'id_agente_asignado' => ['nullable', 'exists:usuarios,id'],
                 'id_servicio' => [
                     'required',
                     'integer',
@@ -36,19 +36,24 @@ class TicketStore extends FormRequest
                 'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
                 'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
 
-                'estado' => ['required', 'in:Nuevo,Abierto,Pendiente,Resuelto'],
+                'estado' => ['required', 'string', 'max:50'],
                 'fecha_resolucion' => ['nullable', 'date', 'after_or_equal:today'],
 
+                'ticket_calle' => ['nullable', 'string', 'max:255'],
+                'ticket_numero' => ['nullable', 'string', 'max:50'],
+                'ticket_municipio' => ['nullable', 'string', 'max:150'],
+                'ticket_estado' => ['nullable', 'string', 'max:150'],
                 'latitud' => ['nullable', 'numeric'],
                 'longitud' => ['nullable', 'numeric'],
 
                 'observaciones' => ['nullable', 'string'],
+                'tags' => 'nullable|string',
             ];
         }
         return [
             'id_ciudadano' => ['required', 'exists:ciudadanos,id'],
             'id_direccion_municipal' => ['required', 'exists:direccion_municipals,id'],
-            'id_agente_asignado' => ['required', 'exists:usuarios,id'],
+            'id_agente_asignado' => ['nullable', 'exists:usuarios,id'],
             'id_servicio' => [
                 'required',
                 'integer',
@@ -65,11 +70,16 @@ class TicketStore extends FormRequest
             'prioridad' => ['required', 'in:Baja,Media,Alta,Urgente'],
             'tipo_ticket' => ['required', 'in:Pregunta,Incidente,Problema,Tarea'],
 
-            'estado' => ['required', 'in:Nuevo,Abierto,Pendiente,Resuelto'],
+            'estado' => ['required', 'string', 'max:50'],
 
             'direccion_texto' => ['nullable', 'string', 'max:255'],
+            
             'latitud' => ['nullable', 'numeric'],
             'longitud' => ['nullable', 'numeric'],
+            'ticket_calle' => ['nullable', 'string', 'max:255'],
+            'ticket_numero' => ['nullable', 'string', 'max:50'],
+            'ticket_municipio' => ['nullable', 'string', 'max:150'],
+            'ticket_estado' => ['nullable', 'string', 'max:150'],
 
             'observaciones' => ['nullable', 'string'],
             'adjuntos' => ['nullable', 'array'],
@@ -78,6 +88,7 @@ class TicketStore extends FormRequest
                 'mimes:jpg,jpeg,png,pdf,doc,docx',
                 'max:5120', // 5 MB por archivo
             ],
+            'tags' => ['nullable','string'],
         ];
     }
 
@@ -90,7 +101,6 @@ class TicketStore extends FormRequest
             'id_direccion_municipal.exists' => 'La dirección municipal seleccionada no existe.',
             'id_servicio.required' => 'El servicio es obligatorio.',
             'id_servicio.exists' => 'El servicio seleccionado no existe.',
-            'id_agente_asignado.required' => 'El agente asignado es obligatorio.',
             'id_agente_asignado.exists' => 'El agente asignado seleccionado no existe.',
             'asunto.required' => 'El asunto es obligatorio.',
             'asunto.string' => 'El asunto debe ser una cadena de texto.',

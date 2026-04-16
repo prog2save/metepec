@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<x-common.page-breadcrumb pageTitle="Agregar Dirección Municipal" />
+@section('title', 'Crear Servicio')
+<x-common.page-breadcrumb pageTitle="Agregar Servicio" />
 <div class="space-y-6">
 
     @if (session('success'))
@@ -31,7 +32,7 @@
             @csrf
             <div>
                 <label for="nombre_direccion" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Nombre de la Dirección Municipal
+                    Nombre de la Dirección Municipal <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="nombre_direccion" name="nombre_direccion" value="{{ old('nombre_direccion') }}" placeholder="Pj: Obras Públicas"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -39,7 +40,7 @@
             </div>
             <div>
                 <label for="contacto_principal" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Nombre del Contacto Principal
+                    Nombre del Contacto Principal <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="contacto_principal" name="contacto_principal" value="{{ old('contacto_principal') }}"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -47,7 +48,7 @@
             </div>
             <div>
                 <label for="telefono" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Teléfono
+                    Teléfono <span class="text-red-500">*</span>
                 </label>
                 <input type="number" maxlength="10" id="telefono" name="telefono" value="{{ old('telefono') }}"
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />
@@ -55,7 +56,7 @@
             </div>
             <div>
                 <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Email
+                    Email <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="email" name="email" value="{{ old('email') }}" 
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" />

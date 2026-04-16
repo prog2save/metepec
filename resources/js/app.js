@@ -12,10 +12,16 @@ import { Calendar } from "@fullcalendar/core";
 import TomSelect from "tom-select";
 import "tom-select/dist/css/tom-select.css";
 
+import DataTable from "datatables.net-dt";
+import "datatables.net-responsive-dt";
+import "datatables.net-dt/css/dataTables.dataTables.css";
+import "datatables.net-responsive-dt/css/responsive.dataTables.css";
+
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.flatpickr = flatpickr;
 window.FullCalendar = Calendar;
+window.DataTable = DataTable;
 
 Alpine.start();
 
@@ -65,17 +71,25 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    const ids = ["#id_ciudadano", "#id_agente_asignado", "#id_direccion_municipal", "#id_servicio"];
+    const ids = [
+        "#id_ciudadano",
+        "#id_agente_asignado",
+        "#id_direccion_municipal",
+        "#id_servicio",
+    ];
 
     ids.forEach((sel) => {
         const el = document.querySelector(sel);
+
         if (!el) return;
 
-        new TomSelect(el, {
-            create: false,
-            sortField: { field: "text", direction: "asc" },
-            placeholder: "Escribe para buscar...",
-            allowEmptyOption: true,
-        });
+        if (!el.tomselect) {
+            new TomSelect(el, {
+                create: false,
+                sortField: { field: "text", direction: "asc" },
+                placeholder: "Escribe para buscar...",
+                allowEmptyOption: true,
+            });
+        }
     });
 });
